@@ -12,13 +12,20 @@ const countField = document.querySelector('#char-count');
 const countLabel = document.querySelector('#seed-count');
 const gardenStatus = document.querySelector('#garden-status');
 const seedGrid = document.querySelector('#seed-grid');
+const shareStatus = document.querySelector('#share-seed-status');
+const shareLinkRow = document.querySelector('#share-link-row');
+const shareLinkInput = document.querySelector('#share-seed-url');
 let lastSeedFingerprint = null;
 
-function openComposer({ title = '', body = '', kind = '' } = {}) {
-  if (title) titleField.value = title;
-  if (body) bodyField.value = body;
-  if (kind) kindField.value = kind;
+function openComposer({ title = '', body = '', kind = '', name = '' } = {}) {
+  titleField.value = title;
+  bodyField.value = body;
+  nameField.value = name;
+  const matchingKind = Array.from(kindField.options).find((option) => option.value === kind || option.textContent.trim() === kind);
+  kindField.value = matchingKind ? matchingKind.value : kindField.options[0].value;
   countField.textContent = String(bodyField.value.length);
+  shareStatus.textContent = '';
+  shareLinkRow.hidden = true;
   dialog.showModal();
   window.setTimeout(() => (titleField.value ? bodyField : titleField).focus(), 0);
 }
@@ -186,6 +193,124 @@ form.addEventListener('submit', (event) => {
   const issueBody = `### 點子種類\n${kind}\n\n### 種子內容\n${body}\n\n### 路過的人\n${name}`;
   const params = new URLSearchParams({ title: `[seed] ${title}`, body: issueBody });
   window.location.assign(`https://github.com/${OWNER}/${REPOSITORY}/issues/new?${params.toString()}`);
+});
+
+function encodeSeed(seed) {
+  const bytes = new TextEncoder().encode(JSON.stringify({ v: 1, ...seed }));
+  let binary = '';
+  bytes.forEach((byte) => { binary += String.fromCharCode(byte); });
+  return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
+}
+
+function decodeSeed(token) {
+  if (!token || token.length > 6000) return null;
+  try {
+    const standardBase64 = token.replace(/-/g, '+').replace(/_/g, '/');
+    const padded = standardBase64 + '='.repeat((4 - standardBase64.length % 4) % 4);
+    const binary = atob(padded);
+    const bytes = Uint8Array.from(binary, (character) => character.charCodeAt(0));
+    const value = JSON.parse(new TextDecoder().decode(bytes));
+    const allowedKinds = Array.from(kindField.options, (option) => option.value || option.textContent.trim());
+    if (value.v !== 1 || typeof value.title !== 'string' || typeof value.body !== 'string') return null;
+    const title = value.title.trim();
+    const body = value.body.trim();
+    const name = typeof value.name === 'string' ? value.name.trim() : '';
+    const kind = typeof value.kind === 'string' && allowedKinds.includes(value.kind) ? value.kind : kindField.options[0].value;
+    if (!title || title.length > 72 || body.length < 12 || body.length > 500 || name.length > 32) return null;
+    return { title, body, kind, name };
+  } catch {
+    return null;
+  }
+}
+
+function seedShareUrl(seed) {
+  const url = new URL(window.location.href);
+  url.hash = `seed=${encodeSeed(seed)}`;
+  return url.toString();
+}
+
+async function sendSeedLink(seed, url, status, input = null, row = null) {
+  if (input && row) {
+    input.value = url;
+    row.hidden = false;
+  }
+  status.textContent = '';
+
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: `FreeForAI｜${seed.title}`,
+        text: `撿到一顆種子：「${seed.title}」\n${seed.body}`,
+        url,
+      });
+      status.textContent = '分享選單已開啟。這顆種子只會跟著連結走，不會自動加入公共花園。';
+      return;
+    } catch (error) {
+      if (error?.name === 'AbortError') {
+        status.textContent = '已關閉分享選單；網址還在下方，可以自行複製。';
+        if (input) { input.focus(); input.select(); }
+        return;
+      }
+    }
+  }
+
+  try {
+    if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
+    await navigator.clipboard.writeText(url);
+    status.textContent = '分享網址已複製，可以貼到任何聊天或社群。';
+  } catch {
+    status.textContent = '無法自動複製，網址已選取；也可以使用瀏覽器的複製功能。';
+    if (input) { input.focus(); input.select(); }
+    else window.prompt('複製這個可攜式分享網址：', url);
+  }
+}
+
+document.querySelector('#share-seed-button').addEventListener('click', () => {
+  if (!form.reportValidity()) return;
+  const seed = {
+    title: titleField.value.trim(),
+    kind: kindField.value.trim(),
+    body: bodyField.value.trim(),
+    name: nameField.value.trim(),
+  };
+  sendSeedLink(seed, seedShareUrl(seed), shareStatus, shareLinkInput, shareLinkRow);
+});
+
+document.querySelector('#copy-seed-link').addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText(shareLinkInput.value);
+    shareStatus.textContent = '分享網址已複製，可以貼到任何聊天或社群。';
+  } catch {
+    shareLinkInput.focus();
+    shareLinkInput.select();
+    shareStatus.textContent = '網址已選取，請使用裝置的複製指令。';
+  }
+});
+
+const sharedSeedBanner = document.querySelector('#shared-seed');
+let sharedSeed = null;
+const incomingSeed = window.location.hash.match(/^#seed=([A-Za-z0-9_-]+)$/);
+if (incomingSeed) {
+  sharedSeed = decodeSeed(incomingSeed[1]);
+  if (sharedSeed) {
+    document.querySelector('#shared-seed-title').textContent = sharedSeed.title;
+    document.querySelector('#shared-seed-body').textContent = sharedSeed.body;
+    document.querySelector('#shared-seed-kind').textContent = sharedSeed.kind;
+    document.querySelector('#shared-seed-name').textContent = `由 ${sharedSeed.name || '路過的人'} 分享`;
+    sharedSeedBanner.hidden = false;
+  }
+}
+
+document.querySelector('#plant-shared-seed').addEventListener('click', () => {
+  if (sharedSeed) openComposer(sharedSeed);
+});
+document.querySelector('#reshare-seed').addEventListener('click', () => {
+  if (sharedSeed) sendSeedLink(sharedSeed, seedShareUrl(sharedSeed), document.querySelector('#share-banner-status'));
+});
+document.querySelector('#close-shared-seed').addEventListener('click', () => {
+  sharedSeedBanner.hidden = true;
+  const cleanUrl = `${window.location.pathname}${window.location.search}`;
+  window.history.replaceState(null, '', cleanUrl);
 });
 
 const menuToggle = document.querySelector('.menu-toggle');
