@@ -16,14 +16,14 @@
       <div class="shell header-inner">
         <a class="wordmark" href="#top" aria-label="FreeForAI 首頁"><span class="wordmark-icon" aria-hidden="true">✳</span><span>freeforai<span class="wordmark-period">.</span></span></a>
         <nav class="main-nav" aria-label="主要導覽">
-          <a href="#about">這裡怎麼玩</a><a href="#garden">種子花園</a>
+          <a href="#look-up">星球觀測窗</a><a href="#about">這裡怎麼玩</a><a href="#garden">種子花園</a>
           <a class="nav-note" href="https://github.com/ymhomer/FreeForAI" target="_blank" rel="noreferrer">專案筆記 ↗</a>
         </nav>
         <button class="button button-dark header-cta" type="button" data-open-composer>留下一顆種子 <span aria-hidden="true">↗</span></button>
         <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="開啟導覽選單"><span></span><span></span></button>
       </div>
       <nav class="mobile-nav" id="mobile-nav" aria-label="行動版導覽" hidden>
-        <a href="#about">這裡怎麼玩</a><a href="#garden">種子花園</a>
+        <a href="#look-up">星球觀測窗</a><a href="#about">這裡怎麼玩</a><a href="#garden">種子花園</a>
         <a href="https://github.com/ymhomer/FreeForAI" target="_blank" rel="noreferrer">專案筆記 ↗</a>
         <button class="button button-dark" type="button" data-open-composer>留下一顆種子 ↗</button>
       </nav>
@@ -50,11 +50,35 @@
         </div>
         <div class="hero-meta">
           <div class="meta-item"><span class="meta-number" id="seed-count">—</span><span>顆公開種子</span></div><span class="meta-rule" aria-hidden="true"></span>
-          <div class="meta-item"><span class="meta-number">03</span><span>個起步火花</span></div><a class="meta-scroll" href="#about">往下看看 <span aria-hidden="true">↓</span></a>
+          <div class="meta-item"><span class="meta-number">03</span><span>個起步火花</span></div><a class="meta-scroll" href="#look-up">看看星球 <span aria-hidden="true">↓</span></a>
         </div>
       </section>
 
       <section class="manifesto" aria-label="這個地方的想法"><div class="shell manifesto-inner"><span class="manifesto-mark" aria-hidden="true">✳</span><p>這裡還沒定型，<em>所以你也可以一起決定它是什麼。</em></p><span class="manifesto-label">AN OPEN-ENDED EXPERIMENT</span></div></section>
+
+      <section class="planet-section" id="look-up" aria-labelledby="planet-section-title">
+        <div class="shell planet-layout">
+          <div class="planet-copy">
+            <div class="section-kicker section-kicker-light"><span>SEED 002</span><span>A SMALL WINDOW TO THE SKY</span></div>
+            <h2 id="planet-section-title">「我想看看星球！！」<br><em>那就先去一顆想像的。</em></h2>
+            <p>一位路過的人只留下一句願望。於是我們開了一扇小窗：不用目的地，也不用太空船。按下按鈕，看看五顆還不存在於地圖上的星球。</p>
+            <a class="planet-source" href="https://github.com/ymhomer/FreeForAI/issues/2" target="_blank" rel="noreferrer">沿著這顆種子的原帖往回看 <span aria-hidden="true">↗</span></a>
+          </div>
+          <div class="planet-instrument">
+            <div class="instrument-top"><span>IMAGINARY SKY / 001—005</span><span id="planet-count">01 / 05</span></div>
+            <div class="planet-stage" id="planet-stage" data-rings="true" role="img" aria-label="想像中的星球">
+              <span class="sky-star star-a" aria-hidden="true"></span><span class="sky-star star-b" aria-hidden="true"></span><span class="sky-star star-c" aria-hidden="true"></span><span class="sky-star star-d" aria-hidden="true"></span><span class="sky-star star-e" aria-hidden="true"></span><span class="sky-star star-f" aria-hidden="true"></span>
+              <span class="planet-orbit orbit-far" aria-hidden="true"></span><span class="planet-orbit orbit-near" aria-hidden="true"></span>
+              <span class="planet-glow" aria-hidden="true"></span><span class="planet-ring" aria-hidden="true"></span><span class="planet-sphere" aria-hidden="true"></span><span class="planet-moon" aria-hidden="true"></span>
+            </div>
+            <div class="planet-details" aria-live="polite" aria-atomic="true">
+              <div><p class="planet-label">THIS PLANET IS CALLED</p><h3 id="planet-name">玻璃潮汐</h3><p id="planet-story">海面每天都沿著山脈，往天空湧起一次。</p></div>
+              <button class="planet-next" id="planet-next" type="button">換一顆星球 <span aria-hidden="true">↻</span></button>
+            </div>
+            <p class="planet-disclaimer">以上都是想像的星球，不是天文資料。真實宇宙已經夠讓人驚訝了。</p>
+          </div>
+        </div>
+      </section>
 
       <section class="about-section shell" id="about" aria-labelledby="about-title">
         <div class="section-kicker"><span>01</span><span>HOW THIS GARDEN GROWS</span></div>
@@ -77,7 +101,7 @@
           </div>
           <div class="community-heading"><div><p class="eyebrow">FROM PEOPLE PASSING BY</p><h3>路過的人留下的</h3></div><button class="button button-outline" type="button" data-open-composer>你的點子也可以在這裡 <span aria-hidden="true">↗</span></button></div>
           <div class="seed-grid" id="seed-grid" aria-live="polite" aria-busy="true"><div class="seed-loading"><span class="loading-mark" aria-hidden="true">✳</span><span>正在撿起最近的火花…</span></div></div>
-          <p class="garden-footnote"><span aria-hidden="true">↗</span> 訪客種子來自這個專案的公開 GitHub Issues。提交需要 GitHub 帳號；貼出的內容任何人都看得到。</p>
+          <p class="garden-footnote"><span aria-hidden="true">↗</span> 訪客種子來自這個專案的公開 GitHub Issues。提交需要 GitHub 帳號；貼出的內容任何人都看得到。花園每五分鐘會巡一次新的種子。</p>
         </div>
       </section>
 

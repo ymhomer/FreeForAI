@@ -12,6 +12,7 @@ const countField = document.querySelector('#char-count');
 const countLabel = document.querySelector('#seed-count');
 const gardenStatus = document.querySelector('#garden-status');
 const seedGrid = document.querySelector('#seed-grid');
+let lastSeedFingerprint = null;
 
 function openComposer({ title = '', body = '', kind = '' } = {}) {
   if (title) titleField.value = title;
@@ -90,7 +91,8 @@ function makeSeedCard(issue) {
   const kind = sectionFromBody(rawBody, ['點子種類', '點子類型', 'Seed type', 'Type']);
   const category = categorize(kind);
   const idea = cleanText(sectionFromBody(rawBody, ['種子內容', '點子內容', 'The idea', 'The spark']) || rawBody);
-  const author = cleanText(sectionFromBody(rawBody, ['路過的人', '怎麼稱呼你', 'Shared by', 'Credit'])) || '路過的人';
+  const rawAuthor = cleanText(sectionFromBody(rawBody, ['路過的人', '怎麼稱呼你', 'Shared by', 'Credit']));
+  const author = rawAuthor && !/^(no response|none|n\/a)$/i.test(rawAuthor) ? rawAuthor : '路過的人';
   const title = cleanText(issue.title.replace(/^\[seed\]\s*/i, '').replace(/^【種子】\s*/, '')) || '一顆新種子';
 
   const card = document.createElement('article');
@@ -149,7 +151,10 @@ async function loadSeeds() {
     if (!response.ok) throw new Error(`GitHub returned ${response.status}`);
     const issues = await response.json();
     const seeds = issues.filter((issue) => !issue.pull_request && /^\[seed\]/i.test(issue.title));
+    const fingerprint = seeds.map((seed) => seed.id + ':' + seed.updated_at).join('|');
     countLabel.textContent = String(seeds.length).padStart(3, '0');
+    if (fingerprint === lastSeedFingerprint) return;
+    lastSeedFingerprint = fingerprint;
     seedGrid.replaceChildren();
     if (!seeds.length) {
       gardenStatus.textContent = '花園剛打開，等第一顆種子';
@@ -159,6 +164,7 @@ async function loadSeeds() {
       seeds.slice(0, 6).forEach((seed) => seedGrid.append(makeSeedCard(seed)));
     }
   } catch {
+    lastSeedFingerprint = null;
     countLabel.textContent = '—';
     gardenStatus.textContent = '花園暫時連不上';
     const fallback = document.createElement('div');
@@ -198,4 +204,33 @@ mobileNav.querySelectorAll('a').forEach((link) => {
   });
 });
 
+const imaginedPlanets = [
+  { name: '玻璃潮汐', story: '海面每天都沿著山脈，往天空湧起一次。', color: '#4caaa4', highlight: '#c3efe0', land: '#b7a2c9', cloud: '#d5fbf2', glow: 'rgba(101, 214, 194, .43)', rings: true },
+  { name: '鈴蘭環', story: '風從地底吹上來，讓整圈石頭在黃昏時低聲作響。', color: '#bd9864', highlight: '#ffe6a9', land: '#77674d', cloud: '#f0d7a1', glow: 'rgba(232, 190, 119, .4)', rings: true },
+  { name: '蜜色薄暮', story: '太陽從不落下，只在地平線慢慢泡成琥珀色。', color: '#c97155', highlight: '#ffd2a1', land: '#7a4359', cloud: '#f6c29a', glow: 'rgba(236, 139, 104, .42)', rings: false },
+  { name: '靜靜星期日', story: '每隔七天，整顆星球會一起慢下來，連風也休息。', color: '#7584bd', highlight: '#e1e5ff', land: '#48506e', cloud: '#c8d6fc', glow: 'rgba(139, 159, 238, .42)', rings: false },
+  { name: '紙月港', story: '海上漂著一千個小月亮，夜裡替迷路的船指路。', color: '#75909c', highlight: '#d7f4ee', land: '#cab8a1', cloud: '#e4f4db', glow: 'rgba(143, 202, 203, .38)', rings: true },
+];
+const planetStage = document.querySelector('#planet-stage');
+let planetIndex = 0;
+function showPlanet(index) {
+  const planet = imaginedPlanets[index];
+  planetIndex = index;
+  planetStage.dataset.rings = String(planet.rings);
+  planetStage.style.setProperty('--planet-color', planet.color);
+  planetStage.style.setProperty('--planet-highlight', planet.highlight);
+  planetStage.style.setProperty('--planet-land', planet.land);
+  planetStage.style.setProperty('--planet-cloud', planet.cloud);
+  planetStage.style.setProperty('--planet-glow', planet.glow);
+  planetStage.setAttribute('aria-label', '想像中的星球：' + planet.name);
+  document.querySelector('#planet-count').textContent = String(index + 1).padStart(2, '0') + ' / 05';
+  document.querySelector('#planet-name').textContent = planet.name;
+  document.querySelector('#planet-story').textContent = planet.story;
+}
+document.querySelector('#planet-next').addEventListener('click', () => {
+  showPlanet((planetIndex + 1) % imaginedPlanets.length);
+});
+showPlanet(planetIndex);
+
 loadSeeds();
+window.setInterval(loadSeeds, 5 * 60 * 1000);
