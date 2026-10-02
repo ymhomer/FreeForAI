@@ -30,6 +30,23 @@
     </header>
 
     <main id="main">
+      <section class="shared-seed-banner shell" id="shared-seed" aria-labelledby="shared-seed-title" hidden>
+        <span class="shared-seed-mark" aria-hidden="true">✳</span>
+        <div class="shared-seed-copy">
+          <p class="eyebrow">A SEED CAME BY IN A LINK</p>
+          <h2 id="shared-seed-title"></h2>
+          <p id="shared-seed-body"></p>
+          <span class="shared-seed-kind" id="shared-seed-kind"></span>
+          <p class="shared-seed-byline" id="shared-seed-name"></p>
+          <p class="shared-seed-note">網址裡含完整文字，任何拿到連結的人都看得到；請勿放私人資料。這不會自動貼到公共花園。</p>
+          <p class="share-banner-status" id="share-banner-status" aria-live="polite"></p>
+        </div>
+        <div class="shared-seed-actions">
+          <button class="button button-outline" id="reshare-seed" type="button">再傳出去 ↗</button>
+          <button class="button button-dark" id="plant-shared-seed" type="button">把它種進公共花園 ↗</button>
+          <button class="shared-seed-close" id="close-shared-seed" type="button" aria-label="關閉分享種子">×</button>
+        </div>
+      </section>
       <section class="hero shell" id="top" aria-labelledby="hero-title">
         <div class="hero-copy">
           <p class="eyebrow"><span class="live-dot"></span> OPEN NOTEBOOK <span class="eyebrow-divider">/</span> 第 001 頁</p>
@@ -101,7 +118,7 @@
           </div>
           <div class="community-heading"><div><p class="eyebrow">FROM PEOPLE PASSING BY</p><h3>路過的人留下的</h3></div><button class="button button-outline" type="button" data-open-composer>你的點子也可以在這裡 <span aria-hidden="true">↗</span></button></div>
           <div class="seed-grid" id="seed-grid" aria-live="polite" aria-busy="true"><div class="seed-loading"><span class="loading-mark" aria-hidden="true">✳</span><span>正在撿起最近的火花…</span></div></div>
-          <p class="garden-footnote"><span aria-hidden="true">↗</span> 訪客種子來自這個專案的公開 GitHub Issues。提交需要 GitHub 帳號；貼出的內容任何人都看得到。花園每五分鐘會巡一次新的種子。</p>
+          <p class="garden-footnote"><span aria-hidden="true">↗</span> 公共花園讀取這個專案的 GitHub Issues，發布需要 GitHub 帳號。免登入分享卡可以透過連結傳遞，但不會自動進入這面公共牆；花園每五分鐘巡一次新種子。</p>
         </div>
       </section>
 
@@ -112,14 +129,20 @@
 
     <dialog class="composer-dialog" id="composer" aria-labelledby="composer-title">
       <div class="dialog-topline"><span>✳ &nbsp; PLANT A SEED</span><button class="dialog-close" type="button" aria-label="關閉">×</button></div>
-      <h2 id="composer-title">把火花放進花園。</h2><p class="dialog-intro">先寫在這裡，接著會前往 GitHub 發布。點子與署名都會公開；提交前仍可在 GitHub 編輯。</p>
+      <h2 id="composer-title">把火花放進花園。</h2><p class="dialog-intro">先寫在這裡，再選擇做成免登入分享卡，或前往 GitHub 留在公共花園。</p>
       <form id="seed-form">
         <label class="field-label" for="seed-title">替它取個名字 <span>必填</span></label><input id="seed-title" name="title" type="text" maxlength="72" required placeholder="像是：一個只會問好問題的筆記本">
         <label class="field-label" for="seed-kind">這顆種子像是…</label><select id="seed-kind" name="kind"><option>一個小工具</option><option>一種互動</option><option>一個怪問題</option><option>其他，還說不上來</option></select>
         <label class="field-label" for="seed-body">多說一點點 <span>必填</span></label><textarea id="seed-body" name="body" rows="4" maxlength="500" minlength="12" required placeholder="它為什麼讓你停下來想了一下？可以從一句話開始。"></textarea>
         <div class="field-foot"><span>不需要完整，也不需要完美。</span><span><b id="char-count">0</b> / 500</span></div>
         <label class="field-label" for="seed-name">怎麼稱呼你？ <span>選填</span></label><input id="seed-name" name="name" type="text" maxlength="32" placeholder="留白也可以">
-        <p class="public-note"><span aria-hidden="true">↗</span> 內容會公開在 GitHub。不要放入電話、Email 或其他個人資料。你必須登入 GitHub 才能完成發布。</p>
+        <p class="public-note"><span aria-hidden="true">↗</span> 若選擇前往 GitHub 發布，內容會公開在 GitHub。不要放入電話、Email 或其他個人資料；發布需要登入 GitHub。</p>
+        <div class="free-share-block">
+          <div><strong>想先分享，不想登入？</strong><p>做成一張可攜式種子卡，透過任何聊天或分享選單傳出去。文字會放在連結裡，不會上傳到網站；拿到網址的人都能閱讀，請勿放私人資料。</p></div>
+          <button class="button button-outline" id="share-seed-button" type="button">做成分享卡 <span aria-hidden="true">↗</span></button>
+        </div>
+        <p class="share-seed-status" id="share-seed-status" aria-live="polite"></p>
+        <div class="share-link-row" id="share-link-row" hidden><label for="share-seed-url">可攜式分享網址</label><div><input id="share-seed-url" type="url" readonly><button class="button button-dark" id="copy-seed-link" type="button">複製</button></div></div>
         <div class="dialog-actions"><button class="button button-quiet" type="button" data-close-composer>先不種了</button><button class="button button-dark" type="submit">前往 GitHub 發布 <span aria-hidden="true">↗</span></button></div>
       </form>
     </dialog>
