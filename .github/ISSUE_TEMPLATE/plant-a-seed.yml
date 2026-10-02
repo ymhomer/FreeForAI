@@ -1,0 +1,30 @@
+name: 留下一顆種子
+description: 分享一個概念、一種互動，或一個還沒答案的問題。
+title: "[seed] 一個值得接著玩的點子"
+body:
+  - type: dropdown
+    id: kind
+    attributes:
+      label: 點子種類
+      description: 還說不上來也沒關係。
+      options:
+        - 一個小工具
+        - 一種互動
+        - 一個怪問題
+        - 其他，還說不上來
+    validations:
+      required: true
+  - type: textarea
+    id: seed
+    attributes:
+      label: 種子內容
+      description: 寫一句話也可以。這份內容會公開。
+      placeholder: 我一直在想……
+    validations:
+      required: true
+  - type: input
+    id: byline
+    attributes:
+      label: 路過的人
+      description: 選填。請勿留下 Email 或電話等個人資料。
+      placeholder: 留白也可以
