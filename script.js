@@ -64,10 +64,11 @@ const roomCatalog = {
   workshop: { element: 'room-workshop', kicker: 'DREAM LAB', coordinate: 'SPACE / 03 · INVENTION', title: '夢想工坊', lede: '不等靈感來；把幾個不相干的碎片丟進去試試。' },
   quiet: { element: 'room-quiet', kicker: 'SLOW MOON', coordinate: 'SPACE / 04 · PAUSE', title: '慢速月台', lede: '什麼也不必完成。跟著微光呼吸一小段時間。' },
   broadcast: { element: 'room-signal', kicker: 'OPEN SIGNAL', coordinate: 'SPACE / 05 · TRANSMISSION', title: '訊號燈', lede: '把一個小念頭包起來，交給這顆星球或下一位路過的人。' },
+  forge: { element: 'room-forge', kicker: 'WORLD FORGE', coordinate: 'SPACE / 06 · POCKET WORLDS', title: '造星窟', lede: '用三個小決定造一顆星球，再把它的座標寄給下一位。' },
 };
 
 function openRandomRoom() {
-  const rooms = ['observatory', 'forest', 'workshop', 'quiet', 'broadcast'];
+  const rooms = ['observatory', 'forest', 'workshop', 'quiet', 'broadcast', 'forge'];
   openRoom(rooms[Math.floor(Math.random() * rooms.length)]);
 }
 
@@ -125,7 +126,7 @@ document.addEventListener('keydown', (event) => {
       event.preventDefault();
       const direction = event.key === 'ArrowRight' ? 1 : -1;
       const nextIndex = (index + direction + stationNodes.length) % stationNodes.length;
-      setOrbitTurn(orbitTurn + direction * 72);
+      setOrbitTurn(orbitTurn + direction * 60);
       stationNodes[nextIndex].focus();
     }
     return;
@@ -539,6 +540,126 @@ document.querySelector('#close-shared-seed').addEventListener('click', () => {
   const cleanUrl = `${window.location.pathname}${window.location.search}`;
   window.history.replaceState(null, '', cleanUrl);
 });
+
+const forgeChoices = {
+  landscape: {
+    'cloud-isles': { name: '雲海群島', description: '山脈漂在海上。', color: '#4faab4', highlight: '#d1eee0', land: '#eee1aa', secondLand: '#d79b83', glow: 'rgba(89, 202, 202, .48)' },
+    'upside-forest': { name: '倒生森林', description: '樹根伸向天空，樹冠藏在地下。', color: '#537e64', highlight: '#d4edaa', land: '#c6d695', secondLand: '#8fc5a7', glow: 'rgba(130, 196, 133, .45)' },
+    'glass-dunes': { name: '琉璃沙原', description: '風把沙丘磨成一面面會移動的鏡子。', color: '#ae715f', highlight: '#ffe1ad', land: '#dcc6ef', secondLand: '#eea886', glow: 'rgba(225, 158, 125, .48)' },
+  },
+  law: {
+    'upward-rain': { description: '雨往天空升起。' },
+    'early-shadow': { description: '每個人的影子都早一天出發。' },
+    'tuesday-gravity': { description: '只有星期二才有重力。' },
+  },
+  welcome: {
+    'question-port': { name: '問句港', description: '來訪的人交換一個問題再離開。' },
+    'dream-shelter': { name: '夢的收容所', description: '來訪的人可以領養一個迷路的夢。' },
+    'silence-stop': { name: '靜音月台', description: '來訪的人一起保留一分鐘沉默。' },
+  },
+};
+const forgeState = { landscape: 'cloud-isles', law: 'upward-rain', welcome: 'question-port' };
+const forgeStage = document.querySelector('#forge-stage');
+const forgeStatus = document.querySelector('#forge-status');
+
+function forgeDescription(state = forgeState) {
+  return `${forgeChoices.landscape[state.landscape].description}${forgeChoices.law[state.law].description}${forgeChoices.welcome[state.welcome].description}`;
+}
+
+function renderForge() {
+  const landscape = forgeChoices.landscape[forgeState.landscape];
+  const welcome = forgeChoices.welcome[forgeState.welcome];
+  const lawIndex = Object.keys(forgeChoices.law).indexOf(forgeState.law);
+  const landscapeIndex = Object.keys(forgeChoices.landscape).indexOf(forgeState.landscape);
+  const welcomeIndex = Object.keys(forgeChoices.welcome).indexOf(forgeState.welcome);
+  const worldId = landscapeIndex * 9 + lawIndex * 3 + welcomeIndex + 1;
+  forgeStage.dataset.landscape = forgeState.landscape;
+  forgeStage.dataset.law = forgeState.law;
+  forgeStage.setAttribute('aria-label', `${landscape.name}・${welcome.name}。${forgeDescription()}`);
+  document.querySelector('#forge-world-id').textContent = String(worldId).padStart(3, '0');
+  document.querySelector('#forge-world-name').textContent = `${landscape.name}・${welcome.name}`;
+  document.querySelector('#forge-world-description').textContent = forgeDescription();
+  document.querySelectorAll('[data-forge-axis]').forEach((button) => {
+    const selected = forgeState[button.dataset.forgeAxis] === button.dataset.forgeValue;
+    button.setAttribute('aria-pressed', String(selected));
+    button.classList.toggle('is-selected', selected);
+  });
+}
+
+document.querySelectorAll('[data-forge-axis]').forEach((button) => {
+  button.addEventListener('click', () => {
+    forgeState[button.dataset.forgeAxis] = button.dataset.forgeValue;
+    renderForge();
+    forgeStatus.textContent = '世界已經改變；座標會跟著新的設定一起更新。';
+  });
+});
+
+document.querySelector('#forge-surprise').addEventListener('click', () => {
+  Object.entries(forgeChoices).forEach(([axis, choices]) => {
+    const values = Object.keys(choices);
+    forgeState[axis] = values[Math.floor(Math.random() * values.length)];
+  });
+  renderForge();
+  forgeStatus.textContent = '星球重新長好了。這 27 種組合都能寄成自己的座標。';
+});
+
+function forgeShareUrl(state = forgeState) {
+  const url = new URL(window.location.href);
+  url.hash = `world=${encodeURIComponent(JSON.stringify({ v: 1, ...state }))}`;
+  return url.toString();
+}
+
+document.querySelector('#forge-share').addEventListener('click', async () => {
+  const url = forgeShareUrl();
+  const title = document.querySelector('#forge-world-name').textContent;
+  const text = `我在 FreeForAI 造了一顆世界：「${title}」\n${forgeDescription()}`;
+  if (navigator.share) {
+    try {
+      await navigator.share({ title: `FreeForAI｜${title}`, text, url });
+      forgeStatus.textContent = '世界座標已送進分享選單；連結會帶著完整設定一起旅行。';
+      return;
+    } catch (error) {
+      if (error?.name === 'AbortError') {
+        forgeStatus.textContent = '分享選單已收起；這顆世界仍在原地等你。';
+        return;
+      }
+    }
+  }
+  try {
+    if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
+    await navigator.clipboard.writeText(url);
+    forgeStatus.textContent = '世界座標已複製。任何打開連結的人都會先降落到這顆星球。';
+  } catch {
+    forgeStatus.textContent = '無法自動複製；可以使用下方提示複製世界座標。';
+    window.prompt('複製這顆袖珍世界的座標：', url);
+  }
+});
+
+document.querySelector('#forge-plant').addEventListener('click', () => {
+  const title = document.querySelector('#forge-world-name').textContent;
+  openComposer({
+    title: `袖珍世界：${title}`.slice(0, 72),
+    body: `${title}。${forgeDescription()}如果你真的走進這顆星球，最想先做什麼？`,
+    kind: '一個怪問題',
+  });
+});
+
+const sharedWorldText = new URLSearchParams(window.location.hash.slice(1)).get('world');
+if (sharedWorldText && sharedWorldText.length < 240) {
+  try {
+    const sharedWorld = JSON.parse(sharedWorldText);
+    const validWorld = sharedWorld?.v === 1 && Object.entries(forgeChoices).every(([axis, choices]) => Object.prototype.hasOwnProperty.call(choices, sharedWorld[axis]));
+    if (validWorld) {
+      Object.assign(forgeState, { landscape: sharedWorld.landscape, law: sharedWorld.law, welcome: sharedWorld.welcome });
+      renderForge();
+      document.querySelector('#forge-arrived-note').hidden = false;
+      forgeStatus.textContent = '你收到一顆別人寄來的世界；三種設定都可以繼續改。';
+      openRoom('forge');
+    }
+  } catch {
+    // Ignore incomplete or hand-edited world coordinates.
+  }
+}
 
 const imaginedPlanets = [
   { name: '玻璃潮汐', story: '海面每天都沿著山脈，往天空湧起一次。', color: '#4caaa4', highlight: '#c3efe0', land: '#b7a2c9', cloud: '#d5fbf2', glow: 'rgba(101, 214, 194, .43)', rings: true },

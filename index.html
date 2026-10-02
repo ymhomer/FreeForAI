@@ -42,9 +42,9 @@
           <div class="arrival-copy">
             <p class="eyebrow"><span class="eyebrow-mark">✳</span> FREEFORAI / 開放星球計畫</p>
             <h1 id="arrival-title">一顆星球，<br><em>很多種宇宙。</em></h1>
-            <p class="arrival-intro">這裡不是一頁頁往下滑的網站。它是一顆正在長大的星球：到穹頂看不存在的天象、到森林撿想法、到工坊把碎片混在一起，也可以在月台安靜一分鐘。</p>
+            <p class="arrival-intro">這裡不是一頁頁往下滑的網站。它是一顆正在長大的星球：看不存在的天象、撿別人留下的想法、混合夢的碎片，或親手造一顆能寄給別人的小世界。</p>
             <button class="route-button" id="let-planet-choose" type="button"><span class="route-button-icon" aria-hidden="true">↗</span><span><b>讓星球替我選一站</b><small>隨機降落 · 每次都不一樣</small></span><span class="route-dice" aria-hidden="true">✳</span></button>
-            <div class="arrival-note"><span>05</span><p>個空間相連成一個星系。拖動星軌，或點一座艙門。</p></div>
+            <div class="arrival-note"><span>06</span><p>個空間相連成一個星系。拖動星軌，或點一座艙門。</p></div>
           </div>
 
           <div class="system-map" id="system-map" aria-label="FreeForAI 星球航線圖">
@@ -60,17 +60,20 @@
               <button class="station-node station-observatory" style="--angle:0deg" data-room-link="observatory" type="button" aria-label="進入想像天象館">
                 <span class="station-symbol" aria-hidden="true">◉</span><span class="station-coordinate">01 / SKYLAB</span><strong>想像天象館</strong><small>重畫不存在的星球</small>
               </button>
-              <button class="station-node station-forest" style="--angle:72deg" data-room-link="forest" type="button" aria-label="進入種子森林">
+              <button class="station-node station-forest" style="--angle:60deg" data-room-link="forest" type="button" aria-label="進入種子森林">
                 <span class="station-symbol" aria-hidden="true">♧</span><span class="station-coordinate">02 / SEEDWOOD</span><strong>種子森林</strong><small>拾起別人留下的火花</small>
               </button>
-              <button class="station-node station-workshop" style="--angle:144deg" data-room-link="workshop" type="button" aria-label="進入夢想工坊">
+              <button class="station-node station-workshop" style="--angle:120deg" data-room-link="workshop" type="button" aria-label="進入夢想工坊">
                 <span class="station-symbol" aria-hidden="true">⌘</span><span class="station-coordinate">03 / DREAM LAB</span><strong>夢想工坊</strong><small>把三個碎片混成一件事</small>
               </button>
-              <button class="station-node station-quiet" style="--angle:216deg" data-room-link="quiet" type="button" aria-label="進入慢速月台">
+              <button class="station-node station-quiet" style="--angle:180deg" data-room-link="quiet" type="button" aria-label="進入慢速月台">
                 <span class="station-symbol" aria-hidden="true">◌</span><span class="station-coordinate">04 / SLOW MOON</span><strong>慢速月台</strong><small>停靠，呼吸，什麼也不做</small>
               </button>
-              <button class="station-node station-broadcast" style="--angle:288deg" data-room-link="broadcast" type="button" aria-label="打開訊號燈，留下或分享一顆種子">
+              <button class="station-node station-broadcast" style="--angle:240deg" data-room-link="broadcast" type="button" aria-label="打開訊號燈，留下或分享一顆種子">
                 <span class="station-symbol" aria-hidden="true">⌁</span><span class="station-coordinate">05 / OPEN SIGNAL</span><strong>訊號燈</strong><small>寫一張卡，傳給下一個人</small>
+              </button>
+              <button class="station-node station-forge" style="--angle:300deg" data-room-link="forge" type="button" aria-label="進入造星窟，創造並分享一顆小世界">
+                <span class="station-symbol" aria-hidden="true">✹</span><span class="station-coordinate">06 / WORLD FORGE</span><strong>造星窟</strong><small>替世界訂下三條規則</small>
               </button>
             </div>
             <div class="map-caption map-caption-top"><span>自由星球 / 自轉中</span><span>001 / OPEN ORBIT</span></div>
@@ -138,6 +141,47 @@
         <section class="room-view signal-view" id="room-signal" data-room="signal" aria-labelledby="signal-heading" hidden>
           <div class="signal-art" aria-hidden="true"><span class="signal-orbit signal-orbit-a"></span><span class="signal-orbit signal-orbit-b"></span><span class="signal-core">✳</span><span class="signal-wave wave-a"></span><span class="signal-wave wave-b"></span><span class="signal-wave wave-c"></span></div>
           <div class="signal-copy"><p class="space-kicker">OPEN SIGNAL / LEAVE A TRACE</p><h3 id="signal-heading">傳一顆小小的<br><em>訊號出去。</em></h3><p>可以寫給這顆星球，也可以寫給一個還沒遇見的人。要不要留下來，由你決定。</p><div class="signal-actions"><button class="room-action-button" type="button" data-open-composer>寫一顆種子 ↗</button><p>公開種植需要 GitHub 登入；可攜分享卡不需帳號。</p></div></div>
+        </section>
+
+        <section class="room-view forge-view" id="room-forge" data-room="forge" aria-labelledby="forge-heading" hidden>
+          <div class="forge-intro">
+            <p class="space-kicker">WORLD FORGE / POCKET WORLDS</p>
+            <h3 id="forge-heading">不必會畫畫，<br><em>也可以造一個世界。</em></h3>
+            <p>挑一種地貌、一條怪規則，再決定訪客怎麼被迎接。世界會立刻變形；完成後，送一個只屬於它的座標出去。</p>
+            <p class="forge-arrived-note" id="forge-arrived-note" hidden>這是一顆被連結寄來的世界。你可以繼續改造，再把新的座標傳下去。</p>
+          </div>
+          <div class="forge-workbench">
+            <div class="forge-display">
+              <div class="forge-sky" id="forge-stage" data-landscape="cloud-isles" data-law="upward-rain" role="img" aria-label="即時生成的袖珍星球">
+                <span class="forge-star forge-star-a" aria-hidden="true"></span><span class="forge-star forge-star-b" aria-hidden="true"></span><span class="forge-star forge-star-c" aria-hidden="true"></span><span class="forge-star forge-star-d" aria-hidden="true"></span><span class="forge-star forge-star-e" aria-hidden="true"></span>
+                <span class="forge-rain rain-a" aria-hidden="true"></span><span class="forge-rain rain-b" aria-hidden="true"></span><span class="forge-rain rain-c" aria-hidden="true"></span><span class="forge-rain rain-d" aria-hidden="true"></span><span class="forge-rain rain-e" aria-hidden="true"></span>
+                <span class="forge-orbit" aria-hidden="true"></span><span class="forge-moon" aria-hidden="true"></span>
+                <span class="forge-planet" aria-hidden="true"><i class="forge-land land-a"></i><i class="forge-land land-b"></i><i class="forge-land land-c"></i></span>
+                <span class="forge-shadow" aria-hidden="true"></span>
+              </div>
+              <div class="forge-nameplate"><div><span>YOUR WORLD / <b id="forge-world-id">001</b></span><h4 id="forge-world-name">雲海群島・問句港</h4><p id="forge-world-description" aria-live="polite">山脈漂在海上；雨往天空升起；來訪的人交換一個問題再離開。</p></div><span class="forge-coordinate-mark" aria-hidden="true">✳</span></div>
+            </div>
+            <div class="forge-controls">
+              <div class="forge-controls-heading"><div><p class="space-kicker">THREE SMALL DECISIONS</p><h4>世界的底層設定</h4></div><button class="forge-surprise" id="forge-surprise" type="button">隨機攪拌 ↻</button></div>
+              <fieldset class="forge-choice-set"><legend>01 / 地貌長什麼樣</legend><div class="forge-choice-row">
+                <button class="forge-choice" type="button" data-forge-axis="landscape" data-forge-value="cloud-isles" aria-pressed="true"><span aria-hidden="true">◒</span>雲海群島</button>
+                <button class="forge-choice" type="button" data-forge-axis="landscape" data-forge-value="upside-forest" aria-pressed="false"><span aria-hidden="true">♧</span>倒生森林</button>
+                <button class="forge-choice" type="button" data-forge-axis="landscape" data-forge-value="glass-dunes" aria-pressed="false"><span aria-hidden="true">◇</span>琉璃沙原</button>
+              </div></fieldset>
+              <fieldset class="forge-choice-set"><legend>02 / 這裡遵守哪條規則</legend><div class="forge-choice-row">
+                <button class="forge-choice" type="button" data-forge-axis="law" data-forge-value="upward-rain" aria-pressed="true"><span aria-hidden="true">↑</span>雨往天空走</button>
+                <button class="forge-choice" type="button" data-forge-axis="law" data-forge-value="early-shadow" aria-pressed="false"><span aria-hidden="true">◐</span>影子早一天出發</button>
+                <button class="forge-choice" type="button" data-forge-axis="law" data-forge-value="tuesday-gravity" aria-pressed="false"><span aria-hidden="true">⌁</span>星期二才有重力</button>
+              </div></fieldset>
+              <fieldset class="forge-choice-set"><legend>03 / 怎麼迎接下一位訪客</legend><div class="forge-choice-row">
+                <button class="forge-choice" type="button" data-forge-axis="welcome" data-forge-value="question-port" aria-pressed="true"><span aria-hidden="true">?</span>交換一個問題</button>
+                <button class="forge-choice" type="button" data-forge-axis="welcome" data-forge-value="dream-shelter" aria-pressed="false"><span aria-hidden="true">☾</span>領養一個迷路的夢</button>
+                <button class="forge-choice" type="button" data-forge-axis="welcome" data-forge-value="silence-stop" aria-pressed="false"><span aria-hidden="true">◌</span>共享一分鐘沉默</button>
+              </div></fieldset>
+              <div class="forge-actions"><button class="room-action-button" id="forge-share" type="button">寄出這顆世界 ↗</button><button class="text-link forge-plant" id="forge-plant" type="button">把設定種進公共花園</button></div>
+              <p class="forge-status" id="forge-status" aria-live="polite">這顆星球還只屬於你。選擇會留在網址裡，不會上傳。</p>
+            </div>
+          </div>
         </section>
       </div>
     </section>
