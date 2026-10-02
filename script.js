@@ -16,6 +16,16 @@ const shareStatus = document.querySelector('#share-seed-status');
 const shareLinkRow = document.querySelector('#share-link-row');
 const shareLinkInput = document.querySelector('#share-seed-url');
 let lastSeedFingerprint = null;
+const universeShell = document.querySelector('#universe-shell');
+const roomVeil = document.querySelector('#room-veil');
+const roomPanel = document.querySelector('#room-panel');
+const stationOrbit = document.querySelector('#station-orbit');
+const stationNodes = Array.from(document.querySelectorAll('.station-node'));
+const travelStatus = document.querySelector('#travel-status');
+let previousFocus = null;
+let activeRoom = '';
+let orbitTurn = 0;
+let dragState = null;
 
 function openComposer({ title = '', body = '', kind = '', name = '' } = {}) {
   titleField.value = title;
@@ -31,7 +41,11 @@ function openComposer({ title = '', body = '', kind = '', name = '' } = {}) {
 }
 
 document.querySelectorAll('[data-open-composer]').forEach((button) => {
-  button.addEventListener('click', () => openComposer());
+  button.addEventListener('click', () => openComposer({
+    title: button.dataset.promptTitle || '',
+    body: button.dataset.promptBody || '',
+    kind: button.dataset.promptKind || '',
+  }));
 });
 document.querySelectorAll('[data-close-composer]').forEach((button) => {
   button.addEventListener('click', () => dialog.close());
@@ -44,9 +58,131 @@ bodyField.addEventListener('input', () => {
   countField.textContent = String(bodyField.value.length);
 });
 
+const roomCatalog = {
+  observatory: { element: 'room-observatory', kicker: 'SKYLAB', coordinate: 'SPACE / 01 · IMAGINATION', title: '想像天象館', lede: '在這裡，先遇見五顆還沒有出現在地圖上的星球。' },
+  forest: { element: 'room-forest', kicker: 'SEEDWOOD', coordinate: 'SPACE / 02 · COMMUNITY', title: '種子森林', lede: '看看路過的人留下了什麼，再決定你想讓它往哪裡長。' },
+  workshop: { element: 'room-workshop', kicker: 'DREAM LAB', coordinate: 'SPACE / 03 · INVENTION', title: '夢想工坊', lede: '不等靈感來；把幾個不相干的碎片丟進去試試。' },
+  quiet: { element: 'room-quiet', kicker: 'SLOW MOON', coordinate: 'SPACE / 04 · PAUSE', title: '慢速月台', lede: '什麼也不必完成。跟著微光呼吸一小段時間。' },
+  broadcast: { element: 'room-signal', kicker: 'OPEN SIGNAL', coordinate: 'SPACE / 05 · TRANSMISSION', title: '訊號燈', lede: '把一個小念頭包起來，交給這顆星球或下一位路過的人。' },
+};
+
+function openRandomRoom() {
+  const rooms = ['observatory', 'forest', 'workshop', 'quiet', 'broadcast'];
+  openRoom(rooms[Math.floor(Math.random() * rooms.length)]);
+}
+
+function openRoom(key) {
+  const room = roomCatalog[key];
+  if (!room) return;
+  previousFocus = document.activeElement;
+  activeRoom = key;
+  document.querySelectorAll('.room-view').forEach((view) => { view.hidden = true; });
+  document.querySelector('#' + room.element).hidden = false;
+  document.querySelector('#room-kicker').textContent = room.kicker;
+  document.querySelector('#room-coordinate').textContent = room.coordinate;
+  document.querySelector('#room-title').textContent = room.title;
+  document.querySelector('#room-lede').textContent = room.lede;
+  roomVeil.hidden = false;
+  universeShell.inert = true;
+  requestAnimationFrame(() => {
+    roomVeil.classList.add('is-open');
+    roomPanel.focus();
+  });
+  travelStatus.textContent = '已抵達：' + room.title + '。';
+}
+
+function closeRoom() {
+  if (roomVeil.hidden) return;
+  roomVeil.classList.remove('is-open');
+  universeShell.inert = false;
+  pauseRestIfRunning();
+  window.setTimeout(() => {
+    if (roomVeil.classList.contains('is-open')) return;
+    roomVeil.hidden = true;
+    if (previousFocus && previousFocus.isConnected) previousFocus.focus();
+  }, 250);
+  if (activeRoom) travelStatus.textContent = '離開 ' + roomCatalog[activeRoom].title + '，仍在星軌上。';
+}
+
+document.querySelectorAll('[data-room-link]').forEach((button) => {
+  button.addEventListener('click', () => openRoom(button.dataset.roomLink));
+});
+document.querySelector('#core-signal').addEventListener('click', openRandomRoom);
+document.querySelector('#let-planet-choose').addEventListener('click', openRandomRoom);
+document.querySelector('#leave-room').addEventListener('click', closeRoom);
+roomVeil.addEventListener('click', (event) => { if (event.target === roomVeil) closeRoom(); });
+
+document.addEventListener('keydown', (event) => {
+  if (dialog.open) return;
+  if (event.key === 'Escape' && !roomVeil.hidden) {
+    event.preventDefault();
+    closeRoom();
+    return;
+  }
+  if (roomVeil.hidden && (event.key === 'ArrowRight' || event.key === 'ArrowLeft')) {
+    const index = stationNodes.indexOf(document.activeElement);
+    if (index !== -1) {
+      event.preventDefault();
+      const direction = event.key === 'ArrowRight' ? 1 : -1;
+      const nextIndex = (index + direction + stationNodes.length) % stationNodes.length;
+      setOrbitTurn(orbitTurn + direction * 72);
+      stationNodes[nextIndex].focus();
+    }
+    return;
+  }
+  if (!roomVeil.hidden && event.key === 'Tab') {
+    const focusable = Array.from(roomPanel.querySelectorAll('button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled])'))
+      .filter((element) => !element.closest('[hidden]'));
+    if (!focusable.length) {
+      event.preventDefault();
+      roomPanel.focus();
+      return;
+    }
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && (document.activeElement === first || document.activeElement === roomPanel)) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  }
+});
+
+function setOrbitTurn(turn) {
+  orbitTurn = ((turn % 360) + 360) % 360;
+  stationOrbit.style.setProperty('--orbit-turn', orbitTurn + 'deg');
+  stationNodes.forEach((node) => node.style.setProperty('--counter-turn', -orbitTurn + 'deg'));
+}
+function pointAngle(event) {
+  const rect = stationOrbit.getBoundingClientRect();
+  return Math.atan2(event.clientY - (rect.top + rect.height / 2), event.clientX - (rect.left + rect.width / 2)) * 180 / Math.PI;
+}
+stationOrbit.addEventListener('pointerdown', (event) => {
+  if (event.target.closest('.station-node')) return;
+  dragState = { pointerId: event.pointerId, startAngle: pointAngle(event), startTurn: orbitTurn };
+  stationOrbit.setPointerCapture(event.pointerId);
+  travelStatus.textContent = '星軌正在旋轉…';
+});
+stationOrbit.addEventListener('pointermove', (event) => {
+  if (!dragState || dragState.pointerId !== event.pointerId) return;
+  let delta = pointAngle(event) - dragState.startAngle;
+  if (delta > 180) delta -= 360;
+  if (delta < -180) delta += 360;
+  setOrbitTurn(dragState.startTurn + delta);
+});
+function finishOrbitDrag(event) {
+  if (!dragState || dragState.pointerId !== event.pointerId) return;
+  dragState = null;
+  travelStatus.textContent = '星軌已轉動。選一座艙門進去看看。';
+}
+stationOrbit.addEventListener('pointerup', finishOrbitDrag);
+stationOrbit.addEventListener('pointercancel', finishOrbitDrag);
+
 document.querySelectorAll('[data-starter-title]').forEach((button) => {
   button.addEventListener('click', () => {
-    const kind = button.closest('.starter-card').querySelector('.starter-kind').textContent.trim();
+    const kind = button.dataset.starterKind || button.closest('.starter-card').querySelector('.starter-kind').textContent.trim();
     openComposer({ title: button.dataset.starterTitle, body: button.dataset.starterBody, kind });
   });
 });
@@ -63,8 +199,99 @@ let sparkIndex = -1;
 document.querySelector('#spark-button').addEventListener('click', () => {
   sparkIndex = (sparkIndex + 1) % starters.length;
   const spark = starters[sparkIndex];
-  document.querySelector('#random-seed').textContent = spark.body;
+  document.querySelector('#random-seed').textContent = '森林丟給你一個問題：「' + spark.body + '」';
   openComposer(spark);
+});
+
+const fragments = {
+  place: ['海底郵局', '雲上的夜市', '被遺忘的月球車站', '一座會做夢的圖書館', '城市最後一株植物', '星期一早晨的火星'],
+  action: ['只收留明天', '把陌生人的問題煮成湯', '替失眠的人保管月亮', '交換還沒發生的記憶', '幫每個人練習說再見', '把安靜寄到很遠的地方'],
+  rule: ['郵件寫的是別人的夢', '每扇門只能從裡面打開', '所有人都忘了時間', '必須用一首歌付帳', '植物會替你回答', '最後一班船永遠不靠岸'],
+};
+const fragmentIndex = { place: 0, action: 0, rule: 0 };
+function renderDream() {
+  const place = fragments.place[fragmentIndex.place];
+  const action = fragments.action[fragmentIndex.action];
+  const rule = fragments.rule[fragmentIndex.rule];
+  document.querySelector('#fragment-place-label').textContent = place;
+  document.querySelector('#fragment-action-label').textContent = action;
+  document.querySelector('#fragment-rule-label').textContent = rule;
+  document.querySelector('#dream-output-title').textContent = place + '裡，' + action + '，而且' + rule + '。';
+  document.querySelector('#dream-output-body').textContent = '如果這是一個真的小工具、儀式或地方，它會怎麼開始？';
+}
+['place', 'action', 'rule'].forEach((part) => {
+  document.querySelector('#fragment-' + part).addEventListener('click', () => {
+    fragmentIndex[part] = (fragmentIndex[part] + 1 + Math.floor(Math.random() * (fragments[part].length - 1))) % fragments[part].length;
+    renderDream();
+  });
+});
+document.querySelector('#dream-next').addEventListener('click', () => {
+  Object.keys(fragments).forEach((part) => {
+    fragmentIndex[part] = (fragmentIndex[part] + 1 + Math.floor(Math.random() * (fragments[part].length - 1))) % fragments[part].length;
+  });
+  renderDream();
+});
+document.querySelector('#workshop-plant').addEventListener('click', () => {
+  openComposer({
+    title: document.querySelector('#dream-output-title').textContent.slice(0, 72),
+    body: document.querySelector('#dream-output-title').textContent + ' ' + document.querySelector('#dream-output-body').textContent,
+    kind: '其他，還說不上來',
+  });
+});
+
+let restRemaining = 60;
+let restTimer = null;
+const restCount = document.querySelector('#rest-count');
+const breathInstruction = document.querySelector('#breath-instruction');
+const breathWorld = document.querySelector('#breath-world');
+const restToggle = document.querySelector('#rest-toggle');
+function updateBreathing() {
+  restCount.textContent = String(restRemaining);
+  const moment = (60 - restRemaining) % 10;
+  if (moment < 4) {
+    breathWorld.classList.add('is-breathing');
+    breathWorld.firstElementChild.textContent = '吸氣';
+    breathInstruction.textContent = '慢慢吸氣，讓光向外展開。';
+  } else if (moment < 5) {
+    breathWorld.firstElementChild.textContent = '停一下';
+    breathInstruction.textContent = '停一下。你不用趕路。';
+  } else {
+    breathWorld.classList.remove('is-breathing');
+    breathWorld.firstElementChild.textContent = '吐氣';
+    breathInstruction.textContent = '慢慢吐氣，讓肩膀鬆開。';
+  }
+}
+function pauseRestIfRunning() {
+  if (!restTimer) return;
+  clearInterval(restTimer);
+  restTimer = null;
+  breathWorld.classList.remove('is-breathing');
+  restToggle.textContent = '繼續慢慢繞一圈 ↗';
+  breathInstruction.textContent = '已在這裡停靠。準備好再繼續。';
+}
+restToggle.addEventListener('click', () => {
+  if (restTimer) {
+    pauseRestIfRunning();
+    return;
+  }
+  if (restRemaining <= 0) restRemaining = 60;
+  restToggle.textContent = '先停一下';
+  updateBreathing();
+  restTimer = window.setInterval(() => {
+    restRemaining -= 1;
+    if (restRemaining <= 0) {
+      restRemaining = 0;
+      restCount.textContent = '0';
+      clearInterval(restTimer);
+      restTimer = null;
+      breathWorld.classList.remove('is-breathing');
+      breathWorld.firstElementChild.textContent = '到了';
+      breathInstruction.textContent = '這一圈結束了。再多待一會也可以。';
+      restToggle.textContent = '再繞一圈 ↗';
+      return;
+    }
+    updateBreathing();
+  }, 1000);
 });
 
 function sectionFromBody(body, names) {
@@ -311,22 +538,6 @@ document.querySelector('#close-shared-seed').addEventListener('click', () => {
   sharedSeedBanner.hidden = true;
   const cleanUrl = `${window.location.pathname}${window.location.search}`;
   window.history.replaceState(null, '', cleanUrl);
-});
-
-const menuToggle = document.querySelector('.menu-toggle');
-const mobileNav = document.querySelector('#mobile-nav');
-menuToggle.addEventListener('click', () => {
-  const willOpen = menuToggle.getAttribute('aria-expanded') !== 'true';
-  menuToggle.setAttribute('aria-expanded', String(willOpen));
-  menuToggle.setAttribute('aria-label', willOpen ? '關閉導覽選單' : '開啟導覽選單');
-  mobileNav.hidden = !willOpen;
-});
-mobileNav.querySelectorAll('a').forEach((link) => {
-  link.addEventListener('click', () => {
-    menuToggle.setAttribute('aria-expanded', 'false');
-    menuToggle.setAttribute('aria-label', '開啟導覽選單');
-    mobileNav.hidden = true;
-  });
 });
 
 const imaginedPlanets = [

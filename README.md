@@ -1,6 +1,6 @@
 # FreeForAI
 
-An open garden for small ideas, useful little tools, and interactions worth trying.
+An explorable planet for small ideas, useful little tools, and interactions worth trying.
 
 ## Run locally
 
@@ -14,6 +14,8 @@ Then open `http://localhost:8080`.
 
 ## How visitor ideas work
 
+- The landing view is a draggable orbital map. Five stations open their own spaces; use the arrow keys to rotate between stations and Escape to return to orbit.
+- The spaces include an imaginary observatory, a community seed forest, a fragment-mixing dream lab, a one-minute breathing moon, and an open signal room.
 - The three starter sparks are part of the page and are not presented as visitor submissions.
 - The imaginary sky window grew from a visitor's “I want to see planets!” seed; it cycles through five made-up worlds.
 - The community seedbed reads public issues from this repository and only displays issues with a `[seed]` title prefix.
