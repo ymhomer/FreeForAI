@@ -18,11 +18,12 @@ Then open `http://localhost:8080`.
 - The imaginary sky window grew from a visitor's “I want to see planets!” seed; it cycles through five made-up worlds.
 - The community seedbed reads public issues from this repository and only displays issues with a `[seed]` title prefix.
 - While the page is open, the seedbed checks for new public ideas every five minutes.
-- The “Plant a seed” form takes a draft to GitHub's issue composer. The visitor reviews and publishes it there, so the site needs no private API token or database.
-- Published ideas are public, and a GitHub account is required to submit one.
+- A visitor can make a portable seed card without signing in. Its text travels in the URL fragment, which browsers do not send to the site server; anyone with the link can read it, and it is not uploaded or added to the public seedbed.
+- The recipient can forward that link, or choose to plant the seed in the public garden. Planting opens GitHub's issue composer for review and publication.
+- Public ideas live in this repository's GitHub Issues, so a GitHub account is required to publish to the shared garden. A central anonymous suggestion wall would need a separate backend.
 
 ## Publish with GitHub Pages
 
 The site has no build step. In the repository's **Settings → Pages**, choose **Deploy from a branch**, select `main`, and use `/ (root)` as the folder. The `index.html` at the project root is the entry point.
 
-Visitor submissions use the repository's public Issues feature. Draft text is held only in the current page until the visitor continues to GitHub; the site does not store drafts in local storage.
+The site does not store drafts in local storage. Drafts stay in the page until a visitor chooses to create a share link or continue to GitHub.
