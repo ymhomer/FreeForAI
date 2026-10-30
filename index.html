@@ -4,20 +4,18 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f5f4ef">
-  <meta name="description" content="FreeForAI：一個輕量、私密的瀏覽器聊天空間。以本機小型問答模型探索一般聊天與技術問題。">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'none'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="description" content="FreeForAI：一個輕量、私密的瀏覽器聊天空間。使用從零訓練的小芽模型，在瀏覽器逐字生成回答。">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; worker-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'">
   <title>FreeForAI — 留一點空間，聊聊。</title>
-  <link rel="stylesheet" href="assets/chat-styles.43d2f839bfc9.css">
-  <script src="assets/chat-model.1cf193e15fd6.js" defer></script>
-  <script src="assets/chat-engine.af86215ce0b9.js" defer></script>
-  <script src="assets/chat-script.954e7cd73908.js" defer></script>
+  <link rel="stylesheet" href="assets/chat-styles.bef959ff6d27.css">
+  <script src="assets/chat-script.821f5dbeb82f.js" defer data-worker="assets/chat-sprout-worker.e3be05d7f308.js" data-runtime="assets/chat-sprout-runtime.ec9e3daeb2ee.js" data-config="assets/sprout-config.1475596ab53e.json" data-weights="assets/sprout-weights.49fedfc218c5.b64"></script>
 </head>
 <body>
   <a href="#message" class="skip">跳到輸入框</a>
   <div class="app">
     <header class="topbar">
       <a class="brand" href="./" aria-label="FreeForAI 首頁"><span class="mark" aria-hidden="true">✳</span> freeforai<span class="dot">.</span></a>
-      <span class="status"><span aria-hidden="true"></span> 本機問答模型</span>
+      <span class="status"><span aria-hidden="true"></span> <span id="model-state">小芽載入中</span></span>
       <div class="actions">
         <button id="export" class="quiet" type="button" disabled>匯出</button>
         <button id="reset" class="new" type="button">＋ 新對話</button>
@@ -39,24 +37,26 @@
         <div id="messages" role="log" aria-live="polite" aria-relevant="additions"></div>
         <div id="suggestions" class="suggestions" aria-label="接著聊"></div>
       </section>
-      <noscript><p class="notice">請啟用 JavaScript，以在本機載入問答模型。</p></noscript>
+      <noscript><p class="notice">請啟用 JavaScript，以載入自建生成模型。</p></noscript>
     </main>
     <footer class="composer-area">
       <form id="chat-form" class="composer">
         <label class="sr-only" for="message">輸入訊息</label>
         <textarea id="message" name="message" rows="1" maxlength="2000" placeholder="想聊什麼？" aria-describedby="input-help" required></textarea>
-        <div class="composer-bottom"><span id="input-help">Enter 傳送 · Shift + Enter 換行</span><button id="send" type="submit" aria-label="傳送訊息" disabled>↑</button></div>
+        <div class="composer-bottom"><span id="input-help">Enter 傳送 · Shift + Enter 換行</span><button id="stop" type="button" hidden>停止</button><button id="send" type="submit" aria-label="傳送訊息" disabled>↑</button></div>
       </form>
-      <p class="disclosure">小型問答配對，非生成式大模型。內容不自動上傳或保存。<button id="about-open" type="button">了解這個實驗 ↗</button></p>
-      <p id="notice" class="notice" role="status">正在載入本機問答程式；若一直停在這裡，請重新整理或檢查瀏覽器是否允許 JavaScript。</p>
+      <p class="disclosure">小芽：自建微型生成模型，能力有限，可能答錯。對話不自動上傳。<button id="about-open" type="button">了解這個實驗 ↗</button></p>
+      <div id="loading-panel" class="loading-panel"><progress id="model-progress" max="100" value="0" aria-label="模型下載進度"></progress><button id="retry" type="button" hidden>重新載入</button></div>
+      <p id="notice" class="notice" role="status">正在載入自建的小芽生成模型，約 1.4 MB。若一直停在這裡，請確認瀏覽器允許 JavaScript。</p>
     </footer>
   </div>
   <dialog id="about" aria-labelledby="about-title">
     <div class="dialog-top"><span class="eyebrow">SMALL, BY DESIGN</span><button id="about-close" type="button" aria-label="關閉說明">×</button></div>
-    <h2 id="about-title">一個誠實的小實驗。</h2>
-    <p>這裡使用助手編寫的範例問答，訓練 TF-IDF 小型配對模型。它會找相近的問題、回覆已編寫的內容，不會生成任意答案，也不是蒸餾大語言模型。</p>
-    <p>目前涵蓋日常聊天、Python、JavaScript、Git、測試與部分技術概念。它不會執行程式、讀取檔案或即時搜尋；對話之間也沒有語意記憶。</p>
-    <p>對話只放在本分頁記憶體，重整即清空。不使用外部 AI API、不收集聊天、不拿對話自動訓練。網站主機仍可能記錄一般連線資料；匯出檔包含你的訊息，請自行保管。</p>
+    <h2 id="about-title">從一顆小芽開始。</h2>
+    <p>小芽 Sprout-Char 是這個專案自行實作的微型神經語言模型，從隨機權重開始，用助手編寫的公開語料學習下一個字。沒有載入 Qwen、GPT 或其他預訓練權重，也不使用關鍵字選答案。</p>
+    <p>模型會根據目前訊息逐字生成；約 26 萬個參數、603 筆訓練問答，還不是通用聊天 AI。它可能混淆題意、重複或產生錯誤，沒有可靠的多輪記憶。每次只讀取目前訊息最後 96 個字，回答最多 180 個字。</p>
+    <p>訓練語料由助手編寫，不是訪客聊天；開發時助手本身也是 AI，因此這不是宣稱完全沒有 AI 協助的語料。這裡沒有呼叫教師模型 API 或另做蒸餾。數學與技術答案都需要另外核對。</p>
+    <p>模型只從本站下載，對話在裝置內生成、不自動保存或上傳。不會上網查詢、讀檔或執行程式。網站主機仍可能有一般連線紀錄；匯出檔需自行保管。</p>
     <a href="https://github.com/ymhomer/FreeForAI" target="_blank" rel="noreferrer">查看原始碼 ↗</a>
   </dialog>
 </body>

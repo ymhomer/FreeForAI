@@ -1,0 +1,122 @@
+{
+  "initialization": "random; no pretrained weights",
+  "seed": 20261030,
+  "numpy": "2.4.2",
+  "parameters": 259952,
+  "steps": 11000,
+  "corpus_pairs": 603,
+  "progress": [
+    {
+      "step": 500,
+      "loss_ema": 0.3652,
+      "seconds": 7.3
+    },
+    {
+      "step": 1000,
+      "loss_ema": 0.12414,
+      "seconds": 14.6
+    },
+    {
+      "step": 1500,
+      "loss_ema": 0.09488,
+      "seconds": 21.9
+    },
+    {
+      "step": 2000,
+      "loss_ema": 0.08656,
+      "seconds": 29.2
+    },
+    {
+      "step": 2500,
+      "loss_ema": 0.0779,
+      "seconds": 36.8
+    },
+    {
+      "step": 3000,
+      "loss_ema": 0.07183,
+      "seconds": 44.3
+    },
+    {
+      "step": 3500,
+      "loss_ema": 0.07089,
+      "seconds": 51.9
+    },
+    {
+      "step": 4000,
+      "loss_ema": 0.06428,
+      "seconds": 59.4
+    },
+    {
+      "step": 4500,
+      "loss_ema": 0.0604,
+      "seconds": 67.0
+    },
+    {
+      "step": 5000,
+      "loss_ema": 0.05837,
+      "seconds": 74.5
+    },
+    {
+      "step": 5500,
+      "loss_ema": 0.05783,
+      "seconds": 81.9
+    },
+    {
+      "step": 6000,
+      "loss_ema": 0.06144,
+      "seconds": 89.3
+    },
+    {
+      "step": 6500,
+      "loss_ema": 0.05815,
+      "seconds": 96.6
+    },
+    {
+      "step": 7000,
+      "loss_ema": 0.0528,
+      "seconds": 104.1
+    },
+    {
+      "step": 7500,
+      "loss_ema": 0.0569,
+      "seconds": 111.7
+    },
+    {
+      "step": 8000,
+      "loss_ema": 0.05643,
+      "seconds": 119.1
+    },
+    {
+      "step": 8500,
+      "loss_ema": 0.04747,
+      "seconds": 126.4
+    },
+    {
+      "step": 9000,
+      "loss_ema": 0.0486,
+      "seconds": 133.8
+    },
+    {
+      "step": 9500,
+      "loss_ema": 0.05002,
+      "seconds": 141.1
+    },
+    {
+      "step": 10000,
+      "loss_ema": 0.04865,
+      "seconds": 148.4
+    },
+    {
+      "step": 10500,
+      "loss_ema": 0.04937,
+      "seconds": 155.7
+    },
+    {
+      "step": 11000,
+      "loss_ema": 0.04995,
+      "seconds": 163.0
+    }
+  ],
+  "weightsSha256": "4cc0c299d9e29f94f173c46e4d13f65d76174aba33b2add18225dab5f11a0275",
+  "training_loss_is_not_answer_accuracy": true
+}

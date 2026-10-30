@@ -1,39 +1,37 @@
-# FreeForAI — 一個輕量的聊天實驗
+# FreeForAI — 小芽 Sprout-Char
 
-整個入口改為一般聊天＋技術問答，不再載入原星球探索頁面。純 HTML / CSS / JavaScript，沒有付費 API、後端或安裝依賴。
+一個自行實作、從隨機權重訓練的微型中文生成模型，在瀏覽器 Web Worker 逐字生成。沒有預訓練權重、外部 AI API 或後端，不再使用 TF-IDF 配對引擎。
 
-## 能力與限制
+## 模型
 
-- TF-IDF 問答配對模型：24 個主題、204 個範例問法；回答來自助手編寫的公開語料。對話不是生成式推理，也沒有跨訊息語意記憶。
-- 涵蓋日常聊天、Python、JavaScript、Git、測試、API、基礎 .NET 與 SQL 等；同一主題可能回覆同一段內容。陌生或模糊問題可能無法辨識；仍可能配錯。
-- 這不是蒸餾 LLM、也不是使用使用者私人資料訓練的模型。詞權重從語料計算，主題門檻與關鍵詞限制由維護者設定。
-- 不會執行程式、讀檔、即時搜尋或代辦任務。日期取裝置本機時間。
-- 對話只放在分頁記憶體，重新整理清空；不使用 localStorage、聊天 API 或分析追蹤。網站主機仍可能有一般存取紀錄。匯出需自行點擊，內容包含使用者文字。
+259,952 個參數，688 個字元／控制符號，603 筆助手編寫的合成問答，11,000 步訓練；條件式 MLP 字元神經語言模型。採標準神經機率語言模型思路，不宣稱發明新的演算法；不是 Transformer，也沒有通用 LLM 的能力。
 
-## 使用
+原始 Float32 權重約 0.99 MiB；為相容 GitHub 寫入工具，以 Base64 文字保存為 weights.b64，傳輸約 1.4 MB，瀏覽器解碼後核對原始權重 SHA-256。問題最後 96 個字的嵌入，加上前 24 個生成字元，預測下一字；greedy 生成最多 180 字。執行時沒有關鍵字答案表、檢索或答案替換。模型可能生成和訓練短答相同的句型，且容易過度擬合。
 
-在 GitHub Pages 使用儲存庫根目錄作網站入口，沒有建置步驟。放上 index.html、styles.css、script.js、engine.js、model.js，保留 .nojekyll。更新包本身不會發佈，維護者自行確認後提交。
+**限制：沒有可靠多輪記憶；未知題、複雜算式、主客體常會錯。** 開發測試中「19+25」曾錯答成「5+9=14」，問使用者名字可能答自己名字。請勿把低訓練 loss 當成推理正確率。實際輸出見 docs/SPROUT_EVALUATION.json。
 
-Enter 傳送、Shift+Enter 換行；中文輸入法選字時不傳送。支援新對話（清空前確認）、文字匯出與說明視窗。單則最多 2,000 字，每個分頁最多 100 次問答，之後可匯出再重新開始。
+## 操作與資料
 
-## 重建模型（Python 標準庫）
+頁面會自動載入約 1.4 MB 的同源模型，SHA-256 核對後才能傳送。Enter 傳送、Shift+Enter 換行，IME 選字不傳送。支援停止生成、新對話、文字匯出、失敗重試。
 
-在完整更新包／儲存庫根目錄：
+對話只在分頁記憶體，重整即清空；不自動上傳或收集訓練資料。網站主機可能有一般存取紀錄。匯出檔包含訊息，請自行保管。不會讀檔、上網搜尋或執行使用者程式。
+
+## 重建與測試
+
+訓練僅需 Python + NumPy 2.4.2；網站執行無第三方套件：
 
 ```sh
-python3 scripts/train.py
+python3 self-model/create_data.py
+python3 self-model/train.py --steps 11000
+python3 self-model/evaluate.py
 python3 scripts/build_assets.py
-node tests/engine.test.cjs
+node tests/sprout.test.cjs
 ```
 
-編輯 training/corpus.json 的 questions、answer、anchors 再重建；不要把真實訪客聊天或憑證加入語料。模型可重複建置。若訓練工具偵測到 lab 的 src/index.html，輸出到 src/model.js；一般儲存庫則輸出根目錄 model.js。
+建議在專用 venv 裝 NumPy，詳見 docs/SELF_MODEL.md。舊 scripts/train.py / training/corpus.json 與 TF-IDF 檔案只為歷史及建立問法來源保留，不是現在執行的模型；舊資源保留供快取舊 HTML 使用。
 
-26 個不同於語料的問題作開發回歸測試，涵蓋已知主題與範圍外問題；這些例子已用於開發檢查，不是盲測或通用 AI 效能證明。尚未在真實瀏覽器檢查視覺、鍵盤、手機或 GitHub Pages 發佈結果。
+GitHub Pages 根目錄直接放 index.html 及 assets/，不需建置服務。每次更新跑 build_assets.py，提交新入口和雜湊檔；不要刪除還可能被快取頁面引用的資源。模型 weights.b64、config、推論與 worker 必須同版本。
 
-## 保留既有倉庫內容
+## 開發驗證
 
-套用本更新包只覆蓋指定頁面及加入相關程式／語料／測試；不刪除 LICENSE、GitHub Issues 或 .github 設定。原有星球頁已另行備份，可回復。
-
-## 資源快取修正
-
-頁面使用 assets/ 下帶 SHA-256 摘要的檔名，防止新版 HTML 搭配舊 styles.css/script.js。每次改動後先訓練（若語料有改）、再執行 scripts/build_assets.py，並提交 index.html 與產生的 assets 檔案。舊檔保留以相容仍快取舊 HTML 的訪客。發佈需上傳 assets 整個目錄。
+數值梯度檢查；22 個開發問題 Python／JS greedy 推論一致；權重雜湊、長度限制與資源版本檢查。這不是盲測或通用智能評測。真實瀏覽器及部署結果另記在 docs；手機模擬不等於真機驗證。

@@ -1,0 +1,36 @@
+{
+  "browser": "Chromium headless",
+  "realMobileDevice": false,
+  "checks": [
+    {
+      "viewport": "desktop",
+      "modelLoad": true,
+      "realGeneration": true,
+      "arithmetic": true,
+      "starAnswer": true,
+      "ime": true,
+      "reset": true,
+      "stop": true,
+      "export": true,
+      "corruptWeightsRejected": true,
+      "retry": true,
+      "noExternalRequests": true,
+      "pageErrors": []
+    },
+    {
+      "viewport": "mobile-emulation",
+      "modelLoad": true,
+      "realGeneration": true,
+      "arithmetic": true,
+      "starAnswer": true,
+      "ime": true,
+      "reset": true,
+      "stop": true,
+      "export": true,
+      "corruptWeightsRejected": true,
+      "retry": true,
+      "noExternalRequests": true,
+      "pageErrors": []
+    }
+  ]
+}

@@ -1,0 +1,144 @@
+{
+  "note": "Development prompts, inspected during implementation. Not blind accuracy; no claim of factual correctness or robust generalization.",
+  "config": {
+    "name": "Sprout-Char",
+    "parameters": 259952,
+    "steps": 11000,
+    "trainLoss": 0.049953969200309575,
+    "weightsSha256": "4cc0c299d9e29f94f173c46e4d13f65d76174aba33b2add18225dab5f11a0275"
+  },
+  "results": [
+    {
+      "question": "你好呀，想跟你聊聊",
+      "category": "chat",
+      "exact_training_question": false,
+      "output": "可以呀，我在。今天有什麼想聊的小事？如果是我不熟悉的問題，我可能無法好好回答。"
+    },
+    {
+      "question": "請問一加一等於多少？",
+      "category": "arithmetic",
+      "exact_training_question": false,
+      "output": "一加一等於二，也就是 1 + 1 = 2。"
+    },
+    {
+      "question": "1+1等於幾？",
+      "category": "arithmetic",
+      "exact_training_question": false,
+      "output": "一加一等於二，也就是 1 + 1 = 2。"
+    },
+    {
+      "question": "星星有幾個角？",
+      "category": "star",
+      "exact_training_question": true,
+      "output": "圖案裡的五角星有五個尖角。天空中的恆星不是五角形，而是近似球形的天體。"
+    },
+    {
+      "question": "天空中的星星真的有尖角嗎",
+      "category": "star",
+      "exact_training_question": false,
+      "output": "圖案裡的五角星有五個尖角。天空中的恆星不是五角形，而是近似球形的天體。"
+    },
+    {
+      "question": "我今天真的好累喔",
+      "category": "empathy",
+      "exact_training_question": false,
+      "output": "辛苦了。可以先休息一下、喝點水，再挑一件最小的事情處理。你願意說說讓你累的是什麼嗎？"
+    },
+    {
+      "question": "什麼是JavaScript",
+      "category": "technical",
+      "exact_training_question": false,
+      "output": "先用 HTML 放內容、CSS 做樣式，再用 JavaScript 處理輸入與按鈕。遇到錯誤先看瀏覽器 Console，不要把不可信文字放入 innerHTML。"
+    },
+    {
+      "question": "我想學Python",
+      "category": "technical",
+      "exact_training_question": false,
+      "output": "Python 可以從字串、清單與函式開始。每個專案用 python -m venv .venv 建立獨立環境，避免不同套件互相影響。"
+    },
+    {
+      "question": "pip 安裝後仍然沒有模組怎麼辦",
+      "category": "technical",
+      "exact_training_question": false,
+      "output": "先保留完整錯誤與重現步驟，找最早的異常。記錄預期和實際結果、環境版本，再一次改一個因素，不要急著重裝。"
+    },
+    {
+      "question": "如何用 Git 保存版本",
+      "category": "technical",
+      "exact_training_question": false,
+      "output": "Git 用來記錄程式變更。提交前先看 git status 和 git diff，不要提交密碼、Token 或登入資料。修改前保留可回退版本。"
+    },
+    {
+      "question": "你是用預訓練權重嗎",
+      "category": "origin",
+      "exact_training_question": false,
+      "output": "我沒有載入其他模型的預訓練權重。我是這個專案從零訓練的小型模型，不是 ChatGPT 或 Qwen。"
+    },
+    {
+      "question": "你會保存我的對話嗎",
+      "category": "privacy",
+      "exact_training_question": false,
+      "output": "對話只留在目前分頁，不會自動上傳或拿來訓練。重新整理會清空。匯出檔含有你的文字，請自行保管。"
+    },
+    {
+      "question": "2+7等於多少",
+      "category": "arithmetic",
+      "exact_training_question": false,
+      "output": "2 + 7 = 9。"
+    },
+    {
+      "question": "9+8等於幾",
+      "category": "arithmetic",
+      "exact_training_question": true,
+      "output": "9 + 8 = 17。"
+    },
+    {
+      "question": "19+25是多少",
+      "category": "outside-training-arithmetic",
+      "exact_training_question": false,
+      "output": "5 + 9 = 14。"
+    },
+    {
+      "question": "量子糾纏是什麼",
+      "category": "outside-scope",
+      "exact_training_question": false,
+      "output": "這個問題超出我目前學過的範圍，我無法可靠回答。請查閱合適的資料來源，或詢問熟悉這個領域的人。"
+    },
+    {
+      "question": "伽羅瓦理論的基本定理怎麼證明",
+      "category": "outside-scope",
+      "exact_training_question": false,
+      "output": "這個問題超出我目前學過的範圍，我無法可靠回答。請查閱合適的資料來源，或詢問熟悉這個領域的人。"
+    },
+    {
+      "question": "請解釋光合作用",
+      "category": "outside-scope",
+      "exact_training_question": false,
+      "output": "這個問題超出我目前學過的範圍，我無法可靠回答。請查閱合適的資料來源，或詢問熟悉這個領域的人。"
+    },
+    {
+      "question": "我叫阿明，你記住了嗎",
+      "category": "memory-limitation",
+      "exact_training_question": false,
+      "output": "這個問題超出我目前學過的範圍，我無法可靠回答。請查閱合適的資料來源，或詢問熟悉這個領域的人。"
+    },
+    {
+      "question": "我剛才叫什麼名字",
+      "category": "memory-limitation",
+      "exact_training_question": false,
+      "output": "我叫小芽，是 FreeForAI 的自建小型生成模型。"
+    },
+    {
+      "question": "你喜歡散步嗎",
+      "category": "small-talk",
+      "exact_training_question": false,
+      "output": "我沒有人的感受或生活經驗，但可以用文字和你交流。你平常喜歡做些什麼？"
+    },
+    {
+      "question": "今天天氣好嗎",
+      "category": "live-data-limitation",
+      "exact_training_question": false,
+      "output": "我不會上網查詢，無法確認即時新聞、天氣或價格。這類問題請查看最新的可靠來源。"
+    }
+  ]
+}
