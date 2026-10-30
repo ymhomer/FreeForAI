@@ -1,206 +1,63 @@
 <!doctype html>
 <html lang="zh-Hant">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#080b17">
-    <meta name="description" content="FreeForAI 是一顆可以走進去的超級星球。探索想像天象館、種子森林、發明工坊與靜心月台。">
-    <title>FreeForAI — 一顆星球，很多種宇宙</title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='20' fill='%23f58d78'/%3E%3Cpath d='M20 5c-1 10-5 14-15 15 10 1 14 5 15 15 1-10 5-14 15-15-10-1-14-5-15-15Z' fill='%23080b17'/%3E%3C/svg%3E">
-    <link rel="stylesheet" href="styles.css">
-    <script src="script.js" defer></script>
-  </head>
-  <body>
-    <a class="skip-link" href="#main">跳到星球入口</a>
-    <div class="universe-shell" id="universe-shell">
-      <header class="sky-header">
-        <a class="wordmark" href="#home" aria-label="FreeForAI 星球入口"><span class="wordmark-icon" aria-hidden="true">✳</span><span>freeforai<span class="wordmark-period">.</span></span></a>
-        <div class="header-orbit-readout"><span class="signal-light" aria-hidden="true"></span><span>LIVE ORBIT</span><span class="readout-divider">/</span><span>PUBLIC SEEDS <b id="seed-count">—</b></span></div>
-        <a class="project-link" href="https://github.com/ymhomer/FreeForAI" target="_blank" rel="noreferrer">地面控制台 ↗</a>
-      </header>
-
-      <main id="main">
-        <section class="shared-seed-banner" id="shared-seed" aria-labelledby="shared-seed-title" hidden>
-          <span class="shared-seed-mark" aria-hidden="true">✳</span>
-          <div class="shared-seed-copy">
-            <p class="eyebrow">A SEED ARRIVED IN ORBIT</p>
-            <h2 id="shared-seed-title"></h2>
-            <p id="shared-seed-body"></p>
-            <span class="shared-seed-kind" id="shared-seed-kind"></span>
-            <p class="shared-seed-byline" id="shared-seed-name"></p>
-            <p class="shared-seed-note">網址裡含完整文字，任何拿到連結的人都看得到；請勿放私人資料。這不會自動貼到公共花園。</p>
-            <p class="share-banner-status" id="share-banner-status" aria-live="polite"></p>
-          </div>
-          <div class="shared-seed-actions">
-            <button class="button button-outline" id="reshare-seed" type="button">再傳出去 ↗</button>
-            <button class="button button-dark" id="plant-shared-seed" type="button">把它種進公共花園 ↗</button>
-            <button class="shared-seed-close" id="close-shared-seed" type="button" aria-label="收起分享種子">×</button>
-          </div>
-        </section>
-
-        <section class="arrival" id="home" aria-labelledby="arrival-title">
-          <div class="arrival-copy">
-            <p class="eyebrow"><span class="eyebrow-mark">✳</span> FREEFORAI / 開放星球計畫</p>
-            <h1 id="arrival-title">一顆星球，<br><em>很多種宇宙。</em></h1>
-            <p class="arrival-intro">這裡不是一頁頁往下滑的網站。它是一顆正在長大的星球：看不存在的天象、撿別人留下的想法、混合夢的碎片，或親手造一顆能寄給別人的小世界。</p>
-            <button class="route-button" id="let-planet-choose" type="button"><span class="route-button-icon" aria-hidden="true">↗</span><span><b>讓星球替我選一站</b><small>隨機降落 · 每次都不一樣</small></span><span class="route-dice" aria-hidden="true">✳</span></button>
-            <div class="arrival-note"><span>06</span><p>個空間相連成一個星系。拖動星軌，或點一座艙門。</p></div>
-          </div>
-
-          <div class="system-map" id="system-map" aria-label="FreeForAI 星球航線圖">
-            <div class="map-haze haze-one" aria-hidden="true"></div><div class="map-haze haze-two" aria-hidden="true"></div>
-            <div class="map-constellation constellation-a" aria-hidden="true">✦</div><div class="map-constellation constellation-b" aria-hidden="true">·</div><div class="map-constellation constellation-c" aria-hidden="true">✧</div>
-            <div class="planet-back-orbit orbit-back-a" aria-hidden="true"></div><div class="planet-back-orbit orbit-back-b" aria-hidden="true"></div>
-            <button class="superworld-core" id="core-signal" type="button" aria-label="啟動星球，隨機前往一個空間">
-              <span class="core-rune" aria-hidden="true">✳</span><span class="core-world" aria-hidden="true"><i class="world-land land-a"></i><i class="world-land land-b"></i><i class="world-land land-c"></i><i class="world-cloud cloud-a"></i><i class="world-cloud cloud-b"></i></span>
-              <span class="core-caption"><b>FREE</b><small>WORLD / 001</small></span>
-            </button>
-            <div class="station-orbit" id="station-orbit" aria-label="可拖動的空間軌道">
-              <span class="station-track track-one" aria-hidden="true"></span><span class="station-track track-two" aria-hidden="true"></span>
-              <button class="station-node station-observatory" style="--angle:0deg" data-room-link="observatory" type="button" aria-label="進入想像天象館">
-                <span class="station-symbol" aria-hidden="true">◉</span><span class="station-coordinate">01 / SKYLAB</span><strong>想像天象館</strong><small>重畫不存在的星球</small>
-              </button>
-              <button class="station-node station-forest" style="--angle:60deg" data-room-link="forest" type="button" aria-label="進入種子森林">
-                <span class="station-symbol" aria-hidden="true">♧</span><span class="station-coordinate">02 / SEEDWOOD</span><strong>種子森林</strong><small>拾起別人留下的火花</small>
-              </button>
-              <button class="station-node station-workshop" style="--angle:120deg" data-room-link="workshop" type="button" aria-label="進入夢想工坊">
-                <span class="station-symbol" aria-hidden="true">⌘</span><span class="station-coordinate">03 / DREAM LAB</span><strong>夢想工坊</strong><small>把三個碎片混成一件事</small>
-              </button>
-              <button class="station-node station-quiet" style="--angle:180deg" data-room-link="quiet" type="button" aria-label="進入慢速月台">
-                <span class="station-symbol" aria-hidden="true">◌</span><span class="station-coordinate">04 / SLOW MOON</span><strong>慢速月台</strong><small>停靠，呼吸，什麼也不做</small>
-              </button>
-              <button class="station-node station-broadcast" style="--angle:240deg" data-room-link="broadcast" type="button" aria-label="打開訊號燈，留下或分享一顆種子">
-                <span class="station-symbol" aria-hidden="true">⌁</span><span class="station-coordinate">05 / OPEN SIGNAL</span><strong>訊號燈</strong><small>寫一張卡，傳給下一個人</small>
-              </button>
-              <button class="station-node station-forge" style="--angle:300deg" data-room-link="forge" type="button" aria-label="進入造星窟，創造並分享一顆小世界">
-                <span class="station-symbol" aria-hidden="true">✹</span><span class="station-coordinate">06 / WORLD FORGE</span><strong>造星窟</strong><small>替世界訂下三條規則</small>
-              </button>
-            </div>
-            <div class="map-caption map-caption-top"><span>自由星球 / 自轉中</span><span>001 / OPEN ORBIT</span></div>
-            <div class="map-caption map-caption-bottom"><span id="travel-status" aria-live="polite">拖動星軌，點一座艙門開始探險</span><span>DRAG ORBIT / ARROW KEYS SPIN</span></div>
-            <span class="drag-orbit-handle" aria-hidden="true">↔</span>
-          </div>
-        </section>
-        <div class="orbit-footer"><span>NO FIXED DESTINATION</span><span>你可以只路過，也可以在這裡改變星球。</span><span class="orbit-footer-mark">✳ &nbsp; 2026—∞</span></div>
-      </main>
-    </div>
-
-    <section class="room-veil" id="room-veil" hidden>
-      <div class="room-panel" id="room-panel" role="dialog" aria-modal="true" aria-labelledby="room-title" aria-describedby="room-lede" tabindex="-1">
-        <header class="room-header">
-          <div class="room-brand"><span class="room-brand-mark" aria-hidden="true">✳</span><span>FREEFORAI <b>/</b> <span id="room-kicker">SPACE</span></span></div>
-          <button class="room-exit" id="leave-room" type="button"><span aria-hidden="true">↶</span> 回到星軌 <kbd>ESC</kbd></button>
-        </header>
-        <div class="room-heading">
-          <div><p class="room-coordinate" id="room-coordinate">SPACE / 01</p><h2 id="room-title">空間名稱</h2></div>
-          <p id="room-lede">這裡有一件可以做的小事。</p>
-        </div>
-
-        <section class="room-view observatory-view" id="room-observatory" data-room="observatory" aria-labelledby="observatory-heading" hidden>
-          <div class="room-aside-copy"><p class="space-kicker">SKYLAB / IMAGINARY PLANETS</p><h3 id="observatory-heading">挑一個還沒有名字的地方。</h3><p>有人曾路過說：「我想看看星球！！」於是穹頂打開了。這些都不是天文資料，只是可以暫時住進去的想像。</p><a class="room-source-link" href="https://github.com/ymhomer/FreeForAI/issues/2" target="_blank" rel="noreferrer">回到最初的那句話 ↗</a></div>
-          <div class="planet-instrument">
-            <div class="instrument-top"><span>IMAGINARY SKY / 001—005</span><span id="planet-count">01 / 05</span></div>
-            <div class="planet-stage" id="planet-stage" data-rings="true" role="img" aria-label="想像中的星球"><span class="sky-star star-a" aria-hidden="true"></span><span class="sky-star star-b" aria-hidden="true"></span><span class="sky-star star-c" aria-hidden="true"></span><span class="sky-star star-d" aria-hidden="true"></span><span class="sky-star star-e" aria-hidden="true"></span><span class="sky-star star-f" aria-hidden="true"></span><span class="planet-orbit orbit-far" aria-hidden="true"></span><span class="planet-orbit orbit-near" aria-hidden="true"></span><span class="planet-glow" aria-hidden="true"></span><span class="planet-ring" aria-hidden="true"></span><span class="planet-sphere" aria-hidden="true"></span><span class="planet-moon" aria-hidden="true"></span></div>
-            <div class="planet-details" aria-live="polite" aria-atomic="true"><div><p class="planet-label">THIS WORLD IS CALLED</p><h3 id="planet-name">玻璃潮汐</h3><p id="planet-story">海面每天都沿著山脈，往天空湧起一次。</p></div><button class="planet-next" id="planet-next" type="button">換一顆星球 <span aria-hidden="true">↻</span></button></div>
-            <p class="planet-disclaimer">目前只是一組想像。下一顆星球，可以從你的種子開始。</p>
-          </div>
-          <button class="room-action-button" type="button" data-open-composer data-prompt-kind="一個怪問題" data-prompt-title="一顆還沒被發現的星球" data-prompt-body="想像一顆星球，它有一個地球上沒有的習慣。那個習慣是什麼？">替下一顆星球留一個特徵 ↗</button>
-        </section>
-
-        <section class="room-view forest-view" id="room-forest" data-room="forest" aria-labelledby="forest-heading" hidden>
-          <div class="forest-intro"><div><p class="space-kicker">SEEDWOOD / COMMUNITY GROVE</p><h3 id="forest-heading">這些火花是別人落下的。</h3><p>可以帶走一顆、接著想，也可以把自己的種子種在旁邊。想法不需要先長成計畫。</p></div><button class="room-action-button" type="button" data-open-composer>種下一顆新的 ↗</button></div>
-          <div class="starter-row" aria-label="星球自帶的起步火花">
-            <article class="starter-card starter-coral"><span class="starter-topline"><span>GROUND SIGNAL</span><span>✳ 01</span></span><span class="starter-kind">一個小工具</span><h4>把「不知道怎麼開始」變成第一個小步驟。</h4><button class="starter-action" type="button" data-starter-title="一個從不知道怎麼開始出發的小工具" data-starter-body="想像一個小工具，能把一件讓人卡住的事拆成可開始的第一步。它會怎麼問？" data-starter-kind="一個小工具">撿起這顆火花 <span aria-hidden="true">↗</span></button></article>
-            <article class="starter-card starter-blue"><span class="starter-topline"><span>GROUND SIGNAL</span><span>✳ 02</span></span><span class="starter-kind">一種互動</span><h4>做一個每天只陪你一分鐘的網站。</h4><button class="starter-action" type="button" data-starter-title="每天只陪你一分鐘的網站" data-starter-body="一個每天只需要一分鐘的網站。你打開時，它會給你什麼？" data-starter-kind="一種互動">撿起這顆火花 <span aria-hidden="true">↗</span></button></article>
-            <article class="starter-card starter-lime"><span class="starter-topline"><span>GROUND SIGNAL</span><span>✳ 03</span></span><span class="starter-kind">一個怪問題</span><h4>如果 AI 不用證明自己很厲害，它會做什麼？</h4><button class="starter-action" type="button" data-starter-title="如果 AI 不用證明自己很厲害" data-starter-body="如果 AI 不需要證明自己很厲害、很有效率、很有用，它最想一起做什麼？" data-starter-kind="一個怪問題">撿起這顆火花 <span aria-hidden="true">↗</span></button></article>
-          </div>
-          <div class="community-heading"><div><p class="space-kicker">FOUND BY PASSERS-BY</p><h4>訪客種下的種子 <span id="garden-status">正在打開森林…</span></h4></div><button class="text-link" id="spark-button" type="button">丟給我一個新問題 <span aria-hidden="true">↻</span></button></div>
-          <p class="seed-prompt" id="random-seed" aria-live="polite">也許下一顆火花，就來自現在的你。</p>
-          <div class="seed-grid" id="seed-grid" aria-live="polite" aria-busy="true"><div class="seed-loading"><span class="loading-mark" aria-hidden="true">✳</span><span>正在聽遠方傳來的種子…</span></div></div>
-          <p class="garden-footnote"><span aria-hidden="true">↗</span> 公共種子來自 GitHub Issues，發布需要登入。免登入分享卡可以透過連結流動，但不會自動進入這片森林。</p>
-        </section>
-
-        <section class="room-view workshop-view" id="room-workshop" data-room="workshop" aria-labelledby="workshop-heading" hidden>
-          <div class="workshop-intro"><p class="space-kicker">DREAM LAB / FRAGMENT ENGINE</p><h3 id="workshop-heading">三塊碎片，<br><em>一件還不存在的事。</em></h3><p>轉動每個碎片，直到它們在你腦中撞出聲音。這台機器不會替你判斷有沒有用。</p></div>
-          <div class="fragment-machine">
-            <div class="fragment-row">
-              <button class="fragment-tumbler fragment-place" id="fragment-place" type="button" aria-label="換一個故事地點"><span>WHERE / 地點</span><b id="fragment-place-label">海底郵局</b><small>點一下換詞 ↻</small></button><span class="fragment-join" aria-hidden="true">＋</span>
-              <button class="fragment-tumbler fragment-action" id="fragment-action" type="button" aria-label="換一種奇怪行動"><span>WHAT / 行動</span><b id="fragment-action-label">只收留明天</b><small>點一下換詞 ↻</small></button><span class="fragment-join" aria-hidden="true">＋</span>
-              <button class="fragment-tumbler fragment-rule" id="fragment-rule" type="button" aria-label="換一條不合理的規則"><span>ODD RULE / 規則</span><b id="fragment-rule-label">郵件寫的是別人的夢</b><small>點一下換詞 ↻</small></button>
-            </div>
-            <div class="machine-output"><div class="output-asterisk" aria-hidden="true">✳</div><div><p>剛剛撞出一個訊號</p><h4 id="dream-output-title">海底郵局只收留明天，郵件寫的是別人的夢。</h4><span id="dream-output-body">如果這真的是一件小事，它會怎麼開始？</span></div><button id="dream-next" type="button" aria-label="重新混合三個碎片">↻</button></div>
-            <button class="room-action-button" id="workshop-plant" type="button">把這個怪組合帶去種子森林 ↗</button>
-          </div>
-        </section>
-
-        <section class="room-view quiet-view" id="room-quiet" data-room="quiet" aria-labelledby="quiet-heading" hidden>
-          <div class="quiet-orbit-art" aria-hidden="true"><div class="quiet-orbit-ring ring-a"></div><div class="quiet-orbit-ring ring-b"></div><div class="breath-world" id="breath-world"><span>吸氣</span></div><span class="quiet-moon moon-a"></span><span class="quiet-moon moon-b"></span></div>
-          <div class="quiet-copy"><p class="space-kicker">SLOW MOON / NO TASKS HERE</p><h3 id="quiet-heading">月台沒有要你完成的事。</h3><p>把肩膀放低一點。看著呼吸的光，繞一圈就好。這一分鐘不會留下紀錄。</p><div class="breath-counter"><b id="rest-count">60</b><span>秒 · 一個慢慢的軌道</span></div><p class="breath-instruction" id="breath-instruction" aria-live="polite">準備好時，讓光替你數數。</p><button class="room-action-button" id="rest-toggle" type="button">開始慢慢繞一圈 ↗</button></div>
-        </section>
-
-        <section class="room-view signal-view" id="room-signal" data-room="signal" aria-labelledby="signal-heading" hidden>
-          <div class="signal-art" aria-hidden="true"><span class="signal-orbit signal-orbit-a"></span><span class="signal-orbit signal-orbit-b"></span><span class="signal-core">✳</span><span class="signal-wave wave-a"></span><span class="signal-wave wave-b"></span><span class="signal-wave wave-c"></span></div>
-          <div class="signal-copy"><p class="space-kicker">OPEN SIGNAL / LEAVE A TRACE</p><h3 id="signal-heading">傳一顆小小的<br><em>訊號出去。</em></h3><p>可以寫給這顆星球，也可以寫給一個還沒遇見的人。要不要留下來，由你決定。</p><div class="signal-actions"><button class="room-action-button" type="button" data-open-composer>寫一顆種子 ↗</button><p>公開種植需要 GitHub 登入；可攜分享卡不需帳號。</p></div></div>
-        </section>
-
-        <section class="room-view forge-view" id="room-forge" data-room="forge" aria-labelledby="forge-heading" hidden>
-          <div class="forge-intro">
-            <p class="space-kicker">WORLD FORGE / POCKET WORLDS</p>
-            <h3 id="forge-heading">不必會畫畫，<br><em>也可以造一個世界。</em></h3>
-            <p>挑一種地貌、一條怪規則，再決定訪客怎麼被迎接。世界會立刻變形；完成後，送一個只屬於它的座標出去。</p>
-            <p class="forge-arrived-note" id="forge-arrived-note" hidden>這是一顆被連結寄來的世界。你可以繼續改造，再把新的座標傳下去。</p>
-          </div>
-          <div class="forge-workbench">
-            <div class="forge-display">
-              <div class="forge-sky" id="forge-stage" data-landscape="cloud-isles" data-law="upward-rain" role="img" aria-label="即時生成的袖珍星球">
-                <span class="forge-star forge-star-a" aria-hidden="true"></span><span class="forge-star forge-star-b" aria-hidden="true"></span><span class="forge-star forge-star-c" aria-hidden="true"></span><span class="forge-star forge-star-d" aria-hidden="true"></span><span class="forge-star forge-star-e" aria-hidden="true"></span>
-                <span class="forge-rain rain-a" aria-hidden="true"></span><span class="forge-rain rain-b" aria-hidden="true"></span><span class="forge-rain rain-c" aria-hidden="true"></span><span class="forge-rain rain-d" aria-hidden="true"></span><span class="forge-rain rain-e" aria-hidden="true"></span>
-                <span class="forge-orbit" aria-hidden="true"></span><span class="forge-moon" aria-hidden="true"></span>
-                <span class="forge-planet" aria-hidden="true"><i class="forge-land land-a"></i><i class="forge-land land-b"></i><i class="forge-land land-c"></i></span>
-                <span class="forge-shadow" aria-hidden="true"></span>
-              </div>
-              <div class="forge-nameplate"><div><span>YOUR WORLD / <b id="forge-world-id">001</b></span><h4 id="forge-world-name">雲海群島・問句港</h4><p id="forge-world-description" aria-live="polite">山脈漂在海上；雨往天空升起；來訪的人交換一個問題再離開。</p></div><span class="forge-coordinate-mark" aria-hidden="true">✳</span></div>
-            </div>
-            <div class="forge-controls">
-              <div class="forge-controls-heading"><div><p class="space-kicker">THREE SMALL DECISIONS</p><h4>世界的底層設定</h4></div><button class="forge-surprise" id="forge-surprise" type="button">隨機攪拌 ↻</button></div>
-              <fieldset class="forge-choice-set"><legend>01 / 地貌長什麼樣</legend><div class="forge-choice-row">
-                <button class="forge-choice" type="button" data-forge-axis="landscape" data-forge-value="cloud-isles" aria-pressed="true"><span aria-hidden="true">◒</span>雲海群島</button>
-                <button class="forge-choice" type="button" data-forge-axis="landscape" data-forge-value="upside-forest" aria-pressed="false"><span aria-hidden="true">♧</span>倒生森林</button>
-                <button class="forge-choice" type="button" data-forge-axis="landscape" data-forge-value="glass-dunes" aria-pressed="false"><span aria-hidden="true">◇</span>琉璃沙原</button>
-              </div></fieldset>
-              <fieldset class="forge-choice-set"><legend>02 / 這裡遵守哪條規則</legend><div class="forge-choice-row">
-                <button class="forge-choice" type="button" data-forge-axis="law" data-forge-value="upward-rain" aria-pressed="true"><span aria-hidden="true">↑</span>雨往天空走</button>
-                <button class="forge-choice" type="button" data-forge-axis="law" data-forge-value="early-shadow" aria-pressed="false"><span aria-hidden="true">◐</span>影子早一天出發</button>
-                <button class="forge-choice" type="button" data-forge-axis="law" data-forge-value="tuesday-gravity" aria-pressed="false"><span aria-hidden="true">⌁</span>星期二才有重力</button>
-              </div></fieldset>
-              <fieldset class="forge-choice-set"><legend>03 / 怎麼迎接下一位訪客</legend><div class="forge-choice-row">
-                <button class="forge-choice" type="button" data-forge-axis="welcome" data-forge-value="question-port" aria-pressed="true"><span aria-hidden="true">?</span>交換一個問題</button>
-                <button class="forge-choice" type="button" data-forge-axis="welcome" data-forge-value="dream-shelter" aria-pressed="false"><span aria-hidden="true">☾</span>領養一個迷路的夢</button>
-                <button class="forge-choice" type="button" data-forge-axis="welcome" data-forge-value="silence-stop" aria-pressed="false"><span aria-hidden="true">◌</span>共享一分鐘沉默</button>
-              </div></fieldset>
-              <div class="forge-actions"><button class="room-action-button" id="forge-share" type="button">寄出這顆世界 ↗</button><button class="text-link forge-plant" id="forge-plant" type="button">把設定種進公共花園</button></div>
-              <p class="forge-status" id="forge-status" aria-live="polite">這顆星球還只屬於你。選擇會留在網址裡，不會上傳。</p>
-            </div>
-          </div>
-        </section>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f5f4ef">
+  <meta name="description" content="FreeForAI：一個輕量、私密的瀏覽器聊天空間。以本機小型問答模型探索一般聊天與技術問題。">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'none'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>FreeForAI — 留一點空間，聊聊。</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="model.js" defer></script>
+  <script src="engine.js" defer></script>
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <a href="#message" class="skip">跳到輸入框</a>
+  <div class="app">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="FreeForAI 首頁"><span class="mark" aria-hidden="true">✳</span> freeforai<span class="dot">.</span></a>
+      <span class="status"><span aria-hidden="true"></span> 本機問答模型</span>
+      <div class="actions">
+        <button id="export" class="quiet" type="button" disabled>匯出</button>
+        <button id="reset" class="new" type="button">＋ 新對話</button>
       </div>
-    </section>
-
-    <dialog class="composer-dialog" id="composer" aria-labelledby="composer-title">
-      <div class="dialog-topline"><span>✳ &nbsp; OPEN SIGNAL / PLANT A SEED</span><button class="dialog-close" type="button" aria-label="關閉">×</button></div>
-      <h2 id="composer-title">把火花放進星球。</h2><p class="dialog-intro">選擇讓它成為公共森林的一部分，或先做成一張免登入分享卡，傳給任何你想分享的人。</p>
-      <form id="seed-form">
-        <label class="field-label" for="seed-title">替它取個名字 <span>必填</span></label><input id="seed-title" name="title" type="text" maxlength="72" required placeholder="像是：一個只會問好問題的筆記本">
-        <label class="field-label" for="seed-kind">這顆種子像是…</label><select id="seed-kind" name="kind"><option>一個小工具</option><option>一種互動</option><option>一個怪問題</option><option>其他，還說不上來</option></select>
-        <label class="field-label" for="seed-body">多說一點點 <span>必填</span></label><textarea id="seed-body" name="body" rows="4" maxlength="500" minlength="12" required placeholder="它為什麼讓你停下來想了一下？可以從一句話開始。"></textarea>
-        <div class="field-foot"><span>不需要完整，也不需要完美。</span><span><b id="char-count">0</b> / 500</span></div>
-        <label class="field-label" for="seed-name">怎麼稱呼你？ <span>選填</span></label><input id="seed-name" name="name" type="text" maxlength="32" placeholder="留白也可以">
-        <p class="public-note"><span aria-hidden="true">↗</span> 前往 GitHub 發布的內容會公開，且需要登入；分享網址帶有完整文字，任何拿到連結的人都看得到。兩種方式都請勿放入個人資料。</p>
-        <div class="free-share-block"><div><strong>不想登入，先傳出去也可以。</strong><p>把種子裝進連結，用任何聊天或分享選單寄出。它不會自動進入公共森林。</p></div><button class="button button-outline" id="share-seed-button" type="button">製作分享卡 ↗</button></div>
-        <p class="share-seed-status" id="share-seed-status" aria-live="polite"></p>
-        <div class="share-link-row" id="share-link-row" hidden><label for="share-seed-url">可攜式分享網址</label><div><input id="share-seed-url" type="url" readonly><button class="button button-dark" id="copy-seed-link" type="button">複製</button></div></div>
-        <div class="dialog-actions"><button class="button button-quiet" type="button" data-close-composer>先收起</button><button class="button button-dark" type="submit">前往 GitHub 種植 ↗</button></div>
+    </header>
+    <main id="main">
+      <section id="welcome" class="welcome" aria-labelledby="greeting">
+        <div class="welcome-mark" aria-hidden="true">✳</div>
+        <p class="eyebrow">A LITTLE SPACE TO THINK</p>
+        <h1 id="greeting">留一點空間，<br>聊聊你的想法。</h1>
+        <p class="intro">一個小小的對話實驗。聊日常、問技術，<br class="desktop-break">或從一個還沒成形的念頭開始。</p>
+        <div id="starters" class="starters" aria-label="試試這些話題">
+          <button type="button" data-prompt="陪我聊聊"><span aria-hidden="true">☁</span><span>隨便聊聊<small>今天過得怎麼樣？</small></span><span aria-hidden="true">↗</span></button>
+          <button type="button" data-prompt="我想學 Python"><span aria-hidden="true">⌘</span><span>拆解技術<small>從 Python 開始</small></span><span aria-hidden="true">↗</span></button>
+          <button type="button" data-prompt="給我一個小專案點子"><span aria-hidden="true">✧</span><span>找點靈感<small>做一個有趣的小工具</small></span><span aria-hidden="true">↗</span></button>
+        </div>
+      </section>
+      <section id="conversation" class="conversation" aria-label="對話紀錄" hidden>
+        <div id="messages" role="log" aria-live="polite" aria-relevant="additions"></div>
+        <div id="suggestions" class="suggestions" aria-label="接著聊"></div>
+      </section>
+      <noscript><p class="notice">請啟用 JavaScript，以在本機載入問答模型。</p></noscript>
+    </main>
+    <footer class="composer-area">
+      <form id="chat-form" class="composer">
+        <label class="sr-only" for="message">輸入訊息</label>
+        <textarea id="message" name="message" rows="1" maxlength="2000" placeholder="想聊什麼？" aria-describedby="input-help" required></textarea>
+        <div class="composer-bottom"><span id="input-help">Enter 傳送 · Shift + Enter 換行</span><button id="send" type="submit" aria-label="傳送訊息" disabled>↑</button></div>
       </form>
-    </dialog>
-  </body>
+      <p class="disclosure">小型問答配對，非生成式大模型。內容不自動上傳或保存。<button id="about-open" type="button">了解這個實驗 ↗</button></p>
+      <p id="notice" class="notice" role="status"></p>
+    </footer>
+  </div>
+  <dialog id="about" aria-labelledby="about-title">
+    <div class="dialog-top"><span class="eyebrow">SMALL, BY DESIGN</span><button id="about-close" type="button" aria-label="關閉說明">×</button></div>
+    <h2 id="about-title">一個誠實的小實驗。</h2>
+    <p>這裡使用助手編寫的範例問答，訓練 TF-IDF 小型配對模型。它會找相近的問題、回覆已編寫的內容，不會生成任意答案，也不是蒸餾大語言模型。</p>
+    <p>目前涵蓋日常聊天、Python、JavaScript、Git、測試與部分技術概念。它不會執行程式、讀取檔案或即時搜尋；對話之間也沒有語意記憶。</p>
+    <p>對話只放在本分頁記憶體，重整即清空。不使用外部 AI API、不收集聊天、不拿對話自動訓練。網站主機仍可能記錄一般連線資料；匯出檔包含你的訊息，請自行保管。</p>
+    <a href="https://github.com/ymhomer/FreeForAI" target="_blank" rel="noreferrer">查看原始碼 ↗</a>
+  </dialog>
+</body>
 </html>

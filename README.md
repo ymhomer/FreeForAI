@@ -1,32 +1,34 @@
-# FreeForAI
+# FreeForAI — 一個輕量的聊天實驗
 
-An explorable planet for small ideas, useful little tools, and interactions worth trying.
+整個入口改為一般聊天＋技術問答，不再載入原星球探索頁面。純 HTML / CSS / JavaScript，沒有付費 API、後端或安裝依賴。
 
-## Run locally
+## 能力與限制
 
-This is a dependency-free static site. From the project directory, run:
+- TF-IDF 問答配對模型：24 個主題、204 個範例問法；回答來自助手編寫的公開語料。對話不是生成式推理，也沒有跨訊息語意記憶。
+- 涵蓋日常聊天、Python、JavaScript、Git、測試、API、基礎 .NET 與 SQL 等；同一主題可能回覆同一段內容。陌生或模糊問題可能無法辨識；仍可能配錯。
+- 這不是蒸餾 LLM、也不是使用使用者私人資料訓練的模型。詞權重從語料計算，主題門檻與關鍵詞限制由維護者設定。
+- 不會執行程式、讀檔、即時搜尋或代辦任務。日期取裝置本機時間。
+- 對話只放在分頁記憶體，重新整理清空；不使用 localStorage、聊天 API 或分析追蹤。網站主機仍可能有一般存取紀錄。匯出需自行點擊，內容包含使用者文字。
+
+## 使用
+
+在 GitHub Pages 使用儲存庫根目錄作網站入口，沒有建置步驟。放上 index.html、styles.css、script.js、engine.js、model.js，保留 .nojekyll。更新包本身不會發佈，維護者自行確認後提交。
+
+Enter 傳送、Shift+Enter 換行；中文輸入法選字時不傳送。支援新對話（清空前確認）、文字匯出與說明視窗。單則最多 2,000 字，每個分頁最多 100 次問答，之後可匯出再重新開始。
+
+## 重建模型（Python 標準庫）
+
+在完整更新包／儲存庫根目錄：
 
 ```sh
-python -m http.server 8080
+python3 scripts/train.py
+node tests/engine.test.cjs
 ```
 
-Then open `http://localhost:8080`.
+編輯 training/corpus.json 的 questions、answer、anchors 再重建；不要把真實訪客聊天或憑證加入語料。模型可重複建置。若訓練工具偵測到 lab 的 src/index.html，輸出到 src/model.js；一般儲存庫則輸出根目錄 model.js。
 
-## How visitor ideas work
+26 個不同於語料的問題作開發回歸測試，涵蓋已知主題與範圍外問題；這些例子已用於開發檢查，不是盲測或通用 AI 效能證明。尚未在真實瀏覽器檢查視覺、鍵盤、手機或 GitHub Pages 發佈結果。
 
-- The landing view is a draggable orbital map. Six stations open their own spaces; use the arrow keys to rotate between stations and Escape to return to orbit.
-- The spaces include an imaginary observatory, a community seed forest, a fragment-mixing dream lab, a one-minute breathing moon, an open signal room, and a pocket-world forge.
-- The three starter sparks are part of the page and are not presented as visitor submissions.
-- The imaginary sky window grew from a visitor's “I want to see planets!” seed; it cycles through five made-up worlds.
-- The community seedbed reads public issues from this repository and only displays issues with a `[seed]` title prefix.
-- While the page is open, the seedbed checks for new public ideas every five minutes.
-- A visitor can make a portable seed card without signing in. Its text travels in the URL fragment, which browsers do not send to the site server; anyone with the link can read it, and it is not uploaded or added to the public seedbed.
-- In the world forge, visitors combine one landscape, one local rule, and one welcome ritual into one of 27 illustrated pocket worlds. A world link reopens that exact world and can be changed and forwarded; its small settings payload is carried in the URL fragment without being uploaded or saved by the site.
-- The recipient can forward that link, or choose to plant the seed in the public garden. Planting opens GitHub's issue composer for review and publication.
-- Public ideas live in this repository's GitHub Issues, so a GitHub account is required to publish to the shared garden. A central anonymous suggestion wall would need a separate backend.
+## 保留既有倉庫內容
 
-## Publish with GitHub Pages
-
-The site has no build step. In the repository's **Settings → Pages**, choose **Deploy from a branch**, select `main`, and use `/ (root)` as the folder. The `index.html` at the project root is the entry point.
-
-The site does not store drafts in local storage. Drafts stay in the page until a visitor chooses to create a share link or continue to GitHub.
+套用本更新包只覆蓋指定頁面及加入相關程式／語料／測試；不刪除 LICENSE、GitHub Issues 或 .github 設定。原有星球頁已另行備份，可回復。
