@@ -41,5 +41,13 @@ for(const match of html.matchAll(/(?:src|href)="([^"#]+)"/g)) {
 const ui=fs.readFileSync(path.join(site,'script.js'),'utf8');
 assert(!/innerHTML|eval\(|localStorage|sessionStorage|fetch\(|XMLHttpRequest/.test(ui));
 assert(html.includes("connect-src 'none'"));
+const crypto = require('node:crypto');
+const assets = [...html.matchAll(/(?:src|href)="(assets\/[^"]+)"/g)].map(m => m[1]);
+assert.equal(assets.length,4,'All runtime assets must use versioned names');
+for(const asset of assets) {
+ const digest=crypto.createHash('sha256').update(fs.readFileSync(path.join(site,asset))).digest('hex').slice(0,12);
+ assert(asset.includes('.'+digest+'.'),'Asset name must match content hash');
+}
+assert(!/(?:src|href)="(?:styles.css|script.js|engine.js|model.js)"/.test(html));
 console.log(`PASS ${cases.length} non-training query regression cases; normalization, size bound, assets and static privacy checks.`);
 console.log('Not a general intelligence benchmark; browser layout/accessibility not runtime-tested.');

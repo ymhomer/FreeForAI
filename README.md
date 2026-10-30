@@ -22,6 +22,7 @@ Enter 傳送、Shift+Enter 換行；中文輸入法選字時不傳送。支援�
 
 ```sh
 python3 scripts/train.py
+python3 scripts/build_assets.py
 node tests/engine.test.cjs
 ```
 
@@ -32,3 +33,7 @@ node tests/engine.test.cjs
 ## 保留既有倉庫內容
 
 套用本更新包只覆蓋指定頁面及加入相關程式／語料／測試；不刪除 LICENSE、GitHub Issues 或 .github 設定。原有星球頁已另行備份，可回復。
+
+## 資源快取修正
+
+頁面使用 assets/ 下帶 SHA-256 摘要的檔名，防止新版 HTML 搭配舊 styles.css/script.js。每次改動後先訓練（若語料有改）、再執行 scripts/build_assets.py，並提交 index.html 與產生的 assets 檔案。舊檔保留以相容仍快取舊 HTML 的訪客。發佈需上傳 assets 整個目錄。

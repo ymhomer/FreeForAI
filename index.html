@@ -7,10 +7,10 @@
   <meta name="description" content="FreeForAI：一個輕量、私密的瀏覽器聊天空間。以本機小型問答模型探索一般聊天與技術問題。">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'none'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'">
   <title>FreeForAI — 留一點空間，聊聊。</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="model.js" defer></script>
-  <script src="engine.js" defer></script>
-  <script src="script.js" defer></script>
+  <link rel="stylesheet" href="assets/chat-styles.43d2f839bfc9.css">
+  <script src="assets/chat-model.1cf193e15fd6.js" defer></script>
+  <script src="assets/chat-engine.af86215ce0b9.js" defer></script>
+  <script src="assets/chat-script.954e7cd73908.js" defer></script>
 </head>
 <body>
   <a href="#message" class="skip">跳到輸入框</a>
@@ -48,7 +48,7 @@
         <div class="composer-bottom"><span id="input-help">Enter 傳送 · Shift + Enter 換行</span><button id="send" type="submit" aria-label="傳送訊息" disabled>↑</button></div>
       </form>
       <p class="disclosure">小型問答配對，非生成式大模型。內容不自動上傳或保存。<button id="about-open" type="button">了解這個實驗 ↗</button></p>
-      <p id="notice" class="notice" role="status"></p>
+      <p id="notice" class="notice" role="status">正在載入本機問答程式；若一直停在這裡，請重新整理或檢查瀏覽器是否允許 JavaScript。</p>
     </footer>
   </div>
   <dialog id="about" aria-labelledby="about-title">

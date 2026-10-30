@@ -72,5 +72,6 @@
   $('about-open').addEventListener('click',() => $('about').showModal());
   $('about-close').addEventListener('click',() => $('about').close());
   if (!model || !engine) $('notice').textContent = '模型檔案未載入。請確認 model.js 與 engine.js 已一併放入網站。';
+  else $('notice').textContent = '';
   updateInput();
 })();
